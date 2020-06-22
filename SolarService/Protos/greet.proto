@@ -25,6 +25,12 @@ message EmptyRequest{
 
 }
 
+message ProducingStatisticOffInvertorGroupRequest{
+    double fromDate = 1;
+    double toDate = 2;
+    repeated int32 invertorId = 3;
+}
+
 message ProducingStatisticOnStationRequest{
     double fromDate = 1;
     double toDate = 2;
