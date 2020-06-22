@@ -14,7 +14,7 @@ namespace SolarService.Misc
             return dtDateTime;
         }
 
-        public static double DateTimeToUnixTimeStamp(DateTime date)
+        public static long DateTimeToUnixTimeStamp(DateTime date)
         {
             Timestamp unixTimeStampInSeconds = date.ToTimestamp();
             return unixTimeStampInSeconds.Seconds;

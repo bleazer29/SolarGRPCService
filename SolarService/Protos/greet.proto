@@ -27,14 +27,14 @@ message EmptyRequest{
 }
 
 message ProducingStatisticOffInvertorGroupRequest{
-    double fromDate = 1;
-    double toDate = 2;
+    int64 fromDate = 1;
+    int64 toDate = 2;
     repeated int32 invertorId = 3;
 }
 
 message ProducingStatisticOnStationRequest{
-    double fromDate = 1;
-    double toDate = 2;
+    int64 fromDate = 1;
+    int64 toDate = 2;
     int32 stationId = 3;
 }
 
@@ -58,7 +58,7 @@ message ErrorType{
 
 message Event {
 	int32 id = 1;
-    double date = 2;
+    int64 date = 2;
 	int32 eventTypeId = 3;
     int32 errorTypeId = 4;
     int32 invertorId = 5;
@@ -99,7 +99,7 @@ message ProducingStatistic{
     int32 id = 1;
     double producedEnergy = 2;
     double predictedProducing = 3;
-    double date = 4;
+    int64 date = 4;
     int32 invertorId = 5;
     int32 stationId = 6;
 }
