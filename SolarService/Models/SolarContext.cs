@@ -52,8 +52,8 @@ namespace SolarService.Models
             modelBuilder.Entity<Event>().HasData(
                 new Event[]
                 {
-                    new Event {Id=1, ErrorTypeId=2, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), EventTypeId=1 },
-                    new Event {Id=2, ErrorTypeId=1, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), EventTypeId=1 }
+                    new Event {Id=1, ErrorTypeId=2, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), EventTypeId=1, StationId=1 },
+                    new Event {Id=2, ErrorTypeId=1, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), EventTypeId=1, StationId=2 }
                 });
             modelBuilder.Entity<Invertor>().HasData(
                 new Invertor[]

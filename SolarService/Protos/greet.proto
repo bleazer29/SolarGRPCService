@@ -54,6 +54,7 @@ message Event {
     double date = 3;
 	int32 eventTypeId = 4;
     int32 errorTypeId = 5;
+    int32 stationId = 6;
 }
 
 message SolarStation{
