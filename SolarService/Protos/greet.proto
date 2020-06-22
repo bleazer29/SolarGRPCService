@@ -51,9 +51,10 @@ message ErrorType{
 
 message Event {
 	int32 id = 1;
-    double date = 3;
-	int32 eventTypeId = 4;
-    int32 errorTypeId = 5;
+    double date = 2;
+	int32 eventTypeId = 3;
+    int32 errorTypeId = 4;
+    int32 invertorId = 5;
     int32 stationId = 6;
 }
 
