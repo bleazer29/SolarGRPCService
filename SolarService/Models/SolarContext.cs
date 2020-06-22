@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Google.Protobuf.WellKnownTypes;
+using Microsoft.EntityFrameworkCore;
+using SolarService.Misc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,11 +41,12 @@ namespace SolarService.Models
                 new EventType { Id=1, Name="Error"},
                 new EventType { Id=2, Name="Normal event"}
                 });
-            //modelBuilder.Entity<Event>().HasData(
-            //    new Event[]
-            //    {
-            //        new Event {Id=1, Description="Invertor temperature above the normal", Date= DateTime.Now.AddDays(-2), }
-            //    });
+            modelBuilder.Entity<Event>().HasData(
+                new Event[]
+                {
+                    new Event {Id=1, Description="Invertor voltage too low", Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now), EventTypeId=1 },
+                    new Event {Id=1, Description="Invertor temperature above the normal", Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2)), EventTypeId=1 }
+                });
             modelBuilder.Entity<Invertor>().HasData(
                 new Invertor[]
                 {

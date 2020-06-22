@@ -99,13 +99,6 @@ namespace SolarService
             }
         }
 
-        public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
-        {
-            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-            return dtDateTime;
-        }
-
         public override Task<StationProducedEnergy> GetStationProducedEnergyAsync(InvertorsOnStationRequest request, ServerCallContext context)
         {
             List<Invertor> invertors = db.Invertors.Where(x => x.StationId == request.StationId).ToList();
