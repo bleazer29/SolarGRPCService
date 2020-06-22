@@ -41,11 +41,19 @@ namespace SolarService.Models
                 new EventType { Id=1, Name="Error"},
                 new EventType { Id=2, Name="Normal event"}
                 });
+
+            modelBuilder.Entity<ErrorType>().HasData(
+                new ErrorType[]
+                {
+                new ErrorType { Id=1, Name="Invertor zero current"},
+                new ErrorType { Id=2, Name="Invertor temperature above the normal" }
+                });
+
             modelBuilder.Entity<Event>().HasData(
                 new Event[]
                 {
-                    new Event {Id=1, Description="Invertor voltage too low", Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), EventTypeId=1 },
-                    new Event {Id=2, Description="Invertor temperature above the normal", Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), EventTypeId=1 }
+                    new Event {Id=1, ErrorTypeId=2, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), EventTypeId=1 },
+                    new Event {Id=2, ErrorTypeId=1, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), EventTypeId=1 }
                 });
             modelBuilder.Entity<Invertor>().HasData(
                 new Invertor[]
@@ -73,9 +81,11 @@ namespace SolarService.Models
         public DbSet<SolarStation> SolarStations { get; set; }
         public DbSet<Invertor> Invertors { get; set; }
         public DbSet<EventType> EventTypes { get; set; }
+        public DbSet<ErrorType> ErrorTypes { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<ProducingStatistic> ProducingStatistics { get; set; }
         public DbSet<TelegramAuthorisedUser> TelegramAuthorisedUsers { get; set; }
     }
 }

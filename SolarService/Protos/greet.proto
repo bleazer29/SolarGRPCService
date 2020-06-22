@@ -35,11 +35,16 @@ message EventType{
 	string name = 2;
 }
 
+message ErrorType{
+    int32 id = 1;
+    string name = 2;
+}
+
 message Event {
 	int32 id = 1;
-	string description = 2;
     double date = 3;
 	int32 eventTypeId = 4;
+    int32 errorTypeId = 5;
 }
 
 message SolarStation{
@@ -70,6 +75,15 @@ message User{
     string login = 2;
     string password = 3;
     int32 roleId = 4;
+}
+
+message ProducingStatistic{
+    int32 id = 1;
+    double producedEnergy = 2;
+    double predictedProducing = 3;
+    double date = 4;
+    int32 invertorId = 5;
+    int32 stationId = 6;
 }
 
 message TelegramAuthorisedUser{
