@@ -11,7 +11,7 @@ namespace SolarService
     public class GreeterService : Greeter.GreeterBase
     {
         private readonly ILogger<GreeterService> _logger;
-        private SolarContext db = new SolarContext();
+        private readonly SolarContext db = new SolarContext();
         public GreeterService(ILogger<GreeterService> logger)
         {
             _logger = logger;

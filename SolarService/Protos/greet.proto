@@ -9,21 +9,39 @@ service Greeter {
     rpc GetUsersAsync(EmptyRequest) returns (stream User);
     rpc GetRolesAsync(EmptyRequest) returns (stream Role);
     rpc GetTelegramAuthorisedUsersAsync(EmptyRequest) returns (stream TelegramAuthorisedUser);
+
     rpc GetStationsAsync(EmptyRequest) returns (stream SolarStation);
+
     rpc GetInvertorsOnStationAsync(InvertorsOnStationRequest) returns (stream Invertor);
-    rpc GetStationProducedEnergyAsync(InvertorsOnStationRequest) returns (StationProducedEnergy);
-    rpc GetTotalProducedEnergyAsync(EmptyRequest) returns (StationProducedEnergy);
     rpc GetAllInvertorsAsync(EmptyRequest) returns (stream Invertor);
+
     rpc GetEventsAsync(EmptyRequest) returns (stream Event);
     rpc GetEventTypesAsync(EmptyRequest) returns (stream EventType);
     rpc GetEventsByTypeAsync(EventsByTypeRequest) returns (stream Event);
     rpc GetErrorTypesAsync(EmptyRequest) returns (stream ErrorType);
+
+    rpc GetEventsByErrorCode(ErrorCodeRequest) returns (stream Event);
+    rpc GetEventsByErrorType(ErrorTypeRequest) returns (stream Event);
+    rpc GetEventsByStation(StationRequest) returns (stream Event);
+    rpc GetEventsByInvertor(InvertorRequest) returns (stream Event);
+
     rpc GetAllProducingStatisticsAsync(EmptyRequest) returns (stream ProducingStatistic);
     rpc GetProducingStatistics(ProducingStatisticOnStationRequest) returns (stream ProducingStatistic);
+
+    rpc GetStationProducedEnergyAsync(InvertorsOnStationRequest) returns (StationProducedEnergy);
+    rpc GetTotalProducedEnergyAsync(EmptyRequest) returns (StationProducedEnergy);
 }
 
 message EmptyRequest{
 
+}
+
+message StationRequest{
+    int32 stationId = 1;
+}
+
+message InvertorRequest{
+    int32 invertorId = 1;
 }
 
 message ProducingStatisticOffInvertorGroupRequest{
@@ -44,6 +62,14 @@ message InvertorsOnStationRequest{
 
 message EventsByTypeRequest{
     int32 typeId = 1;
+}
+
+message ErrorCodeRequest{
+    int64 code = 1;
+}
+
+message ErrorTypeRequest{
+    int32 errorTypeId =1;
 }
 
 message EventType{
@@ -86,6 +112,12 @@ message Role{
     int32 id = 1;
     string name = 2;
     bool rootRights = 3;
+    bool station1Pass = 4;
+    bool station2Pass = 5;
+    bool station3Pass = 6;
+    bool station4Pass = 7;
+    bool station5Pass = 8;
+    bool station6Pass = 9;
 }
 
 message User{
