@@ -11,6 +11,7 @@ service Greeter {
     rpc GetStationsAsync(EmptyRequest) returns (stream SolarStation);
     rpc GetInvertorsOnStationAsync(InvertorsOnStationRequest) returns (stream Invertor);
     rpc GetStationProducedEnergyAsync(InvertorsOnStationRequest) returns (StationProducedEnergy);
+    rpc GetTotalProducedEnergyAsync(EmptyRequest) returns (StationProducedEnergy);
     rpc GetAllInvertorsAsync(EmptyRequest) returns (stream Invertor);
     rpc GetEventsAsync(EmptyRequest) returns (stream Event);
     rpc GetEventTypesAsync(EmptyRequest) returns (stream EventType);

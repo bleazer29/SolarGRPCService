@@ -109,6 +109,20 @@ namespace SolarService
         public override Task<StationProducedEnergy> GetStationProducedEnergyAsync(InvertorsOnStationRequest request, ServerCallContext context)
         {
             List<Invertor> invertors = db.Invertors.Where(x => x.StationId == request.StationId).ToList();
+            double totalEnergyOnStation = 0;
+            foreach (Invertor item in invertors)
+            {
+                totalEnergyOnStation += item.ProducedEnergy;
+            }
+            return Task.FromResult(new StationProducedEnergy()
+            {
+                Energy = totalEnergyOnStation
+            });
+        }
+
+        public override Task<StationProducedEnergy> GetTotalProducedEnergyAsync(EmptyRequest request, ServerCallContext context)
+        {
+            List<Invertor> invertors = db.Invertors.ToList();
             double totalEnergy = 0;
             foreach (Invertor item in invertors)
             {
