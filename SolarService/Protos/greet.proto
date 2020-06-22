@@ -7,6 +7,7 @@ package greet;
 
 service Greeter {
     rpc GetUsersAsync(EmptyRequest) returns (stream User);
+    rpc GetRolesAsync(EmptyRequest) returns (stream Role);
     rpc GetTelegramAuthorisedUsersAsync(EmptyRequest) returns (stream TelegramAuthorisedUser);
     rpc GetStationsAsync(EmptyRequest) returns (stream SolarStation);
     rpc GetInvertorsOnStationAsync(InvertorsOnStationRequest) returns (stream Invertor);
