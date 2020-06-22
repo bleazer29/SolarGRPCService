@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+option csharp_namespace = "SolarService";
+
+
+package greet;
+
+service Greeter {
+    rpc GetUsersAsync(EmptyRequest) returns (stream User);
+    rpc GetTelegramAuthorisedUsersAsync(EmptyRequest) returns (stream TelegramAuthorisedUser);
+    rpc GetStationsAsync(EmptyRequest) returns (stream SolarStation);
+    rpc GetInvertorsOnStationAsync(InvertorsOnStationRequest) returns (stream Invertor);
+    rpc GetStationProducedEnergyAsync(InvertorsOnStationRequest) returns (StationProducedEnergy);
+    rpc GetAllInvertorsAsync(EmptyRequest) returns (stream Invertor);
+    rpc GetEventsAsync(EmptyRequest) returns (stream Event);
+    rpc GetEventTypesAsync(EmptyRequest) returns (stream EventType);
+    rpc GetEventsByTypeAsync(EventsByTypeRequest) returns (stream Event);
+}
+
+message EmptyRequest{
+
+}
+
+message InvertorsOnStationRequest{
+    int32 stationId = 1;
+}
+
+message EventsByTypeRequest{
+    int32 typeId = 1;
+}
+
+message EventType{
+	int32 id = 1;
+	string name = 2;
+}
+
+message Event {
+	int32 id = 1;
+	string description = 2;
+    double date = 3;
+	int32 eventTypeId = 4;
+}
+
+message SolarStation{
+    int32 id = 1;
+    string name = 2;
+}
+
+message Invertor{
+	int32 id = 1;
+	string name = 2;
+    double power = 3;
+    double current = 4;
+    double voltage = 5;
+    double producedEnergy = 6;
+    double temperature = 7;
+    string state = 8;
+    int32 stationId = 9;
+}
+
+message Role{
+    int32 id = 1;
+    string name = 2;
+    bool rootRights = 3;
+}
+
+message User{
+    int32 id = 1;
+    string login = 2;
+    string password = 3;
+    int32 roleId = 4;
+}
+
+message TelegramAuthorisedUser{
+    int32 id = 1;
+    int64 telegramUserId = 2;
+}
+
+message StationProducedEnergy{
+    double energy = 1;
+}
