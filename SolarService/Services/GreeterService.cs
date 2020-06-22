@@ -125,5 +125,35 @@ namespace SolarService
                 Energy = totalEnergy
             });
         }
+
+        public override async Task GetErrorTypesAsync(EmptyRequest request, IServerStreamWriter<ErrorType> responseStream, ServerCallContext context)
+        {
+            List<ErrorType> errorTypes = db.ErrorTypes.ToList();
+
+            foreach (ErrorType item in errorTypes)
+            {
+                await responseStream.WriteAsync(item);
+            }
+        }
+
+        public override async Task GetAllProducingStatisticsAsync(EmptyRequest request, IServerStreamWriter<ProducingStatistic> responseStream, ServerCallContext context)
+        {
+            List<ProducingStatistic> errorTypes = db.ProducingStatistics.ToList();
+
+            foreach (ProducingStatistic item in errorTypes)
+            {
+                await responseStream.WriteAsync(item);
+            }
+        }
+
+        public override async Task GetProducingStatistics(ProducingStatisticOnStationRequest request, IServerStreamWriter<ProducingStatistic> responseStream, ServerCallContext context)
+        {
+            List<ProducingStatistic> errorTypes = db.ProducingStatistics.Where(x => x.StationId == request.StationId).ToList();
+
+            foreach (ProducingStatistic item in errorTypes)
+            {
+                await responseStream.WriteAsync(item);
+            }
+        }
     }
 }
