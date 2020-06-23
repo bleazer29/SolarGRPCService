@@ -12,10 +12,7 @@ namespace SolarService.Models
     {
         public SolarContext()
         {
-            if (Database.EnsureCreated())
-            {
-
-            }
+            Database.EnsureCreatedAsync();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -31,9 +28,12 @@ namespace SolarService.Models
             SolarStation st1 = new SolarStation { Id = 1, Name = "Station1" };
             SolarStation st2 = new SolarStation { Id = 2, Name = "Station2" };
             SolarStation st3 = new SolarStation { Id = 3, Name = "Station3" };
+            SolarStation st4 = new SolarStation { Id = 4, Name = "Station4" };
+            SolarStation st5 = new SolarStation { Id = 5, Name = "Station5" };
+            SolarStation st6 = new SolarStation { Id = 6, Name = "Station6" };
 
             modelBuilder.Entity<SolarStation>().HasData(
-                new SolarStation[] { st1, st2, st3 });
+                new SolarStation[] { st1, st2, st3, st4, st5, st6 });
 
             modelBuilder.Entity<EventType>().HasData(
                 new EventType[]
@@ -61,13 +61,27 @@ namespace SolarService.Models
                 new Invertor[]
                 {
                 new Invertor { Id=1, Name="Invertor1", Current=12.3, Power=100.5, ProducedEnergy=130.85, State="Working", StationId = st1.Id, Temperature=26.4, Voltage=20.9},
-                new Invertor { Id=2, Name="Invertor2", Current=16.3, Power=180.5, ProducedEnergy=160.85, State="Working", StationId = st2.Id, Temperature=29.4, Voltage=21.9},
-                new Invertor { Id=3, Name="Invertor3", Current=17.3, Power=200.5, ProducedEnergy=110.85, State="Working", StationId = st3.Id, Temperature=29.0, Voltage=22.9}
+                new Invertor { Id=2, Name="Invertor2", Current=16.3, Power=180.5, ProducedEnergy=160.85, State="Working", StationId = st1.Id, Temperature=29.4, Voltage=21.9},
+                
+                new Invertor { Id=3, Name="Invertor3", Current=17.3, Power=230.5, ProducedEnergy=110.85, State="Working", StationId = st2.Id, Temperature=29.0, Voltage=22.9},
+                new Invertor { Id=4, Name="Invertor4", Current=14.3, Power=170.5, ProducedEnergy=167.85, State="Working", StationId = st2.Id, Temperature=26.4, Voltage=20.9},
+                
+                new Invertor { Id=5, Name="Invertor5", Current=11.3, Power=210.5, ProducedEnergy=110.85, State="Working", StationId = st3.Id, Temperature=29.4, Voltage=21.9},
+                new Invertor { Id=6, Name="Invertor6", Current=19.3, Power=230.5, ProducedEnergy=251.85, State="Working", StationId = st3.Id, Temperature=29.0, Voltage=22.9},
+               
+                new Invertor { Id=7, Name="Invertor7", Current=21.3, Power=131.5, ProducedEnergy=190.85, State="Working", StationId = st4.Id, Temperature=29.4, Voltage=21.9},
+                new Invertor { Id=8, Name="Invertor8", Current=10.3, Power=262.5, ProducedEnergy=251.85, State="Working", StationId = st4.Id, Temperature=29.0, Voltage=22.9},
+                
+                new Invertor { Id=9, Name="Invertor9", Current=24.3, Power=350.5, ProducedEnergy=452.85, State="Working", StationId = st5.Id, Temperature=26.4, Voltage=20.9},
+                new Invertor { Id=10, Name="Invertor10", Current=12.3, Power=152.5, ProducedEnergy=453.85, State="Working", StationId = st5.Id, Temperature=29.4, Voltage=21.9},
+                
+                new Invertor { Id=11, Name="Invertor11", Current=15.3, Power=189.5, ProducedEnergy=165.85, State="Working", StationId = st6.Id, Temperature=29.4, Voltage=21.9},
+                new Invertor { Id=12, Name="Invertor12", Current=22.3, Power=250.5, ProducedEnergy=143.85, State="Working", StationId = st6.Id, Temperature=29.0, Voltage=22.9}
                 });
 
-            Role r1 = new Role() { Id = 1, Name = "Admin", RootRights = true };
-            Role r2 = new Role() { Id = 2, Name = "User", RootRights = false };
-
+            Role r1 = new Role() { Id = 1, Name = "Admin", RootRights = false, Station1Pass = true, Station2Pass = true, Station3Pass = true, Station4Pass = true, Station5Pass = true, Station6Pass = true };
+            Role r2 = new Role() { Id = 2, Name = "User", RootRights = false, Station1Pass = false, Station2Pass = true, Station3Pass = true, Station4Pass = true, Station5Pass = true, Station6Pass = true };
+                
             modelBuilder.Entity<Role>().HasData(
                  new Role[] { r1, r2 });
 
