@@ -29,6 +29,28 @@ namespace SolarService
             }
         }
 
+        public override Task<SuccessResponse> RemoveUser(TelegramAuthorisedUser request, ServerCallContext context)
+        {
+            try
+            {
+                db.TelegramAuthorisedUsers.Remove(request);
+                User temp = db.Users.Where(x => x.Login == request.UserLogin).First();
+                db.Users.Remove(temp);
+                return Task.FromResult(new SuccessResponse()
+                {
+                    Success = true
+                });
+            }
+            catch
+            {
+
+                return Task.FromResult(new SuccessResponse()
+                {
+                    Success = false
+                });
+            }
+        }
+
         public override async Task GetRolesAsync(EmptyRequest request, IServerStreamWriter<Role> responseStream, ServerCallContext context)
         {
             List<Role> roles = db.Roles.ToList();

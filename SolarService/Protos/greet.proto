@@ -6,6 +6,7 @@ package greet;
 
 service Greeter {
     rpc GetUsersAsync(EmptyRequest) returns (stream User);
+    rpc RemoveUser(TelegramAuthorisedUser) returns (SuccessResponse);
     rpc GetRolesAsync(EmptyRequest) returns (stream Role);
     rpc GetTelegramAuthorisedUsersAsync(EmptyRequest) returns (stream TelegramAuthorisedUser);
 
