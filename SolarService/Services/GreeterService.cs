@@ -16,7 +16,6 @@ namespace SolarService
         public GreeterService(ILogger<GreeterService> logger)
         {
             _logger = logger;
-            Console.WriteLine("Service started. Database created");
         }
 
         public override async Task GetUsersAsync(EmptyRequest request, IServerStreamWriter<User> responseStream, ServerCallContext context)
