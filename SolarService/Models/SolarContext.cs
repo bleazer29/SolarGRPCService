@@ -53,9 +53,9 @@ namespace SolarService.Models
             modelBuilder.Entity<Event>().HasData(
                 new Event[]
                 {
-                    new Event {Id=1, ErrorTypeId=2, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), EventTypeId=1, StationId=1, InvertorId=2 },
-                    new Event {Id=2, ErrorTypeId=1, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), EventTypeId=1, StationId=2, InvertorId=1 },
-                    new Event {Id=3, ErrorTypeId=3, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), EventTypeId=1, StationId=2 }
+                    new Event {Id=1, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), ErrorCode = 123, ErrorTypeId=2, EventTypeId=1, StationId=1, InvertorId=2 },
+                    new Event {Id=2, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), ErrorCode = 121, ErrorTypeId=1, EventTypeId=1, StationId=2, InvertorId=1 },
+                    new Event {Id=3, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), ErrorCode = 124, ErrorTypeId=3, EventTypeId=1, StationId=2 }
                 });
             modelBuilder.Entity<Invertor>().HasData(
                 new Invertor[]
@@ -87,7 +87,7 @@ namespace SolarService.Models
         public DbSet<Event> Events { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<ProducingStatistic> ProducingStatistics { get; set; }
+        public DbSet<StationProducingStatistic> StationProducingStatistics { get; set; }
         public DbSet<TelegramAuthorisedUser> TelegramAuthorisedUsers { get; set; }
     }
 }

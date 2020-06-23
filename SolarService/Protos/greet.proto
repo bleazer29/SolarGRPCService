@@ -2,7 +2,6 @@ syntax = "proto3";
 
 option csharp_namespace = "SolarService";
 
-
 package greet;
 
 service Greeter {
@@ -21,19 +20,29 @@ service Greeter {
     rpc GetErrorTypesAsync(EmptyRequest) returns (stream ErrorType);
 
     rpc GetEventsByErrorCode(ErrorCodeRequest) returns (stream Event);
-    rpc GetEventsByErrorType(ErrorTypeRequest) returns (stream Event);
+    //rpc GetEventsByErrorType(ErrorTypeRequest) returns (stream Event); - not sure if needed
     rpc GetEventsByStation(StationRequest) returns (stream Event);
     rpc GetEventsByInvertor(InvertorRequest) returns (stream Event);
 
-    rpc GetAllProducingStatisticsAsync(EmptyRequest) returns (stream ProducingStatistic);
-    rpc GetProducingStatistics(ProducingStatisticOnStationRequest) returns (stream ProducingStatistic);
+    rpc GetAllStationProducingStatisticsAsync(EmptyRequest) returns (stream StationProducingStatistic);
+    rpc GetStationProducingStatisticAsync(StationProducingStatisticRequest) returns (stream StationProducingStatistic);
 
-    rpc GetStationProducedEnergyAsync(InvertorsOnStationRequest) returns (StationProducedEnergy);
-    rpc GetTotalProducedEnergyAsync(EmptyRequest) returns (StationProducedEnergy);
+    rpc GetStationProducedEnergy(InvertorsOnStationRequest) returns (StationProducedEnergy);
+    rpc GetTotalProducedEnergy(EmptyRequest) returns (StationProducedEnergy);
+
+    rpc ChangePowerMeasurementUnit(IsMWRequest) returns (SuccessResponse);
 }
 
 message EmptyRequest{
 
+}
+
+message SuccessResponse{
+    bool success = 1;
+}
+
+message IsMWRequest{
+    bool isMW = 1;
 }
 
 message StationRequest{
@@ -44,13 +53,13 @@ message InvertorRequest{
     int32 invertorId = 1;
 }
 
-message ProducingStatisticOffInvertorGroupRequest{
+message InvertorProducingStatisticRequest{
     int64 fromDate = 1;
     int64 toDate = 2;
     repeated int32 invertorId = 3;
 }
 
-message ProducingStatisticOnStationRequest{
+message StationProducingStatisticRequest{
     int64 fromDate = 1;
     int64 toDate = 2;
     int32 stationId = 3;
@@ -85,10 +94,11 @@ message ErrorType{
 message Event {
 	int32 id = 1;
     int64 date = 2;
-	int32 eventTypeId = 3;
-    int32 errorTypeId = 4;
-    int32 invertorId = 5;
-    int32 stationId = 6;
+    int32 errorCode = 3;
+	int32 eventTypeId = 4;
+    int32 errorTypeId = 5;
+    int32 invertorId = 6;
+    int32 stationId = 7;
 }
 
 message SolarStation{
@@ -127,18 +137,26 @@ message User{
     int32 roleId = 4;
 }
 
-message ProducingStatistic{
+message StationProducingStatistic{
     int32 id = 1;
     double producedEnergy = 2;
     double predictedProducing = 3;
     int64 date = 4;
-    int32 invertorId = 5;
     int32 stationId = 6;
+}
+
+message InvertorProducingStatistic{
+    int32 id = 1;
+    double producedEnergy = 2;
+    double predictedProducing = 3;
+    int64 date = 4;
+    int32 invertorId = 6;
 }
 
 message TelegramAuthorisedUser{
     int32 id = 1;
     int64 telegramUserId = 2;
+    string userLogin = 3;
 }
 
 message StationProducedEnergy{

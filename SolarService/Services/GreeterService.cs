@@ -12,6 +12,7 @@ namespace SolarService
     {
         private readonly ILogger<GreeterService> _logger;
         private readonly SolarContext db = new SolarContext();
+        private bool powerInMW = true;
         public GreeterService(ILogger<GreeterService> logger)
         {
             _logger = logger;
@@ -22,7 +23,7 @@ namespace SolarService
         {
             List<User> users = db.Users.ToList();
 
-            foreach(User user in users)
+            foreach (User user in users)
             {
                 await responseStream.WriteAsync(user);
             }
@@ -94,7 +95,11 @@ namespace SolarService
 
             foreach (Invertor item in invertors)
             {
-                await responseStream.WriteAsync(item);  
+                if (powerInMW)
+                {
+                    item.ProducedEnergy *= 1000;
+                }
+                await responseStream.WriteAsync(item);
             }
         }
 
@@ -104,11 +109,15 @@ namespace SolarService
 
             foreach (Invertor item in invertors)
             {
+                if (powerInMW)
+                {
+                    item.ProducedEnergy *= 1000;
+                }
                 await responseStream.WriteAsync(item);
             }
         }
 
-        public override Task<StationProducedEnergy> GetStationProducedEnergyAsync(InvertorsOnStationRequest request, ServerCallContext context)
+        public override Task<StationProducedEnergy> GetStationProducedEnergy(InvertorsOnStationRequest request, ServerCallContext context)
         {
             List<Invertor> invertors = db.Invertors.Where(x => x.StationId == request.StationId).ToList();
             double totalEnergyOnStation = 0;
@@ -116,13 +125,23 @@ namespace SolarService
             {
                 totalEnergyOnStation += item.ProducedEnergy;
             }
-            return Task.FromResult(new StationProducedEnergy()
+            if (powerInMW)
             {
-                Energy = totalEnergyOnStation
-            });
+                return Task.FromResult(new StationProducedEnergy()
+                {
+                    Energy = totalEnergyOnStation * 1000
+                });
+            }
+            else
+            {
+                return Task.FromResult(new StationProducedEnergy()
+                {
+                    Energy = totalEnergyOnStation
+                });
+            }
         }
 
-        public override Task<StationProducedEnergy> GetTotalProducedEnergyAsync(EmptyRequest request, ServerCallContext context)
+        public override Task<StationProducedEnergy> GetTotalProducedEnergy(EmptyRequest request, ServerCallContext context)
         {
             List<Invertor> invertors = db.Invertors.ToList();
             double totalEnergy = 0;
@@ -130,10 +149,20 @@ namespace SolarService
             {
                 totalEnergy += item.ProducedEnergy;
             }
-            return Task.FromResult(new StationProducedEnergy()
+            if (powerInMW)
             {
-                Energy = totalEnergy
-            });
+                return Task.FromResult(new StationProducedEnergy()
+                {
+                    Energy = totalEnergy * 1000
+                });
+            }
+            else
+            {
+                return Task.FromResult(new StationProducedEnergy()
+                {
+                    Energy = totalEnergy
+                });
+            }
         }
 
         public override async Task GetErrorTypesAsync(EmptyRequest request, IServerStreamWriter<ErrorType> responseStream, ServerCallContext context)
@@ -146,24 +175,83 @@ namespace SolarService
             }
         }
 
-        public override async Task GetAllProducingStatisticsAsync(EmptyRequest request, IServerStreamWriter<ProducingStatistic> responseStream, ServerCallContext context)
+        public override async Task GetAllStationProducingStatisticsAsync(EmptyRequest request, IServerStreamWriter<StationProducingStatistic> responseStream, ServerCallContext context)
         {
-            List<ProducingStatistic> errorTypes = db.ProducingStatistics.ToList();
+            List<StationProducingStatistic> errorTypes = db.StationProducingStatistics.ToList();
 
-            foreach (ProducingStatistic item in errorTypes)
+            foreach (StationProducingStatistic item in errorTypes)
+            {
+                if (powerInMW)
+                {
+                    item.ProducedEnergy *= 1000;
+                }
+                await responseStream.WriteAsync(item);
+            }
+        }
+
+        public override async Task GetStationProducingStatisticAsync(StationProducingStatisticRequest request, IServerStreamWriter<StationProducingStatistic> responseStream, ServerCallContext context)
+        {
+            List<StationProducingStatistic> errorTypes = db.StationProducingStatistics.Where(x => x.StationId == request.StationId).ToList();
+
+            foreach (StationProducingStatistic item in errorTypes)
+            {
+                if (powerInMW)
+                {
+                    item.ProducedEnergy *= 1000;
+                }
+                await responseStream.WriteAsync(item);
+            }
+        }
+
+        public override async Task GetEventsByErrorCode(ErrorCodeRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
+        {
+            List<Event> events = db.Events.Where(x => x.ErrorCode == request.Code).ToList();
+
+            foreach (Event item in events)
             {
                 await responseStream.WriteAsync(item);
             }
         }
 
-        public override async Task GetProducingStatistics(ProducingStatisticOnStationRequest request, IServerStreamWriter<ProducingStatistic> responseStream, ServerCallContext context)
+        public override async Task GetEventsByInvertor(InvertorRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
-            List<ProducingStatistic> errorTypes = db.ProducingStatistics.Where(x => x.StationId == request.StationId).ToList();
+            List<Event> events = db.Events.Where(x => x.InvertorId == request.InvertorId).ToList();
 
-            foreach (ProducingStatistic item in errorTypes)
+            foreach (Event item in events)
             {
                 await responseStream.WriteAsync(item);
             }
         }
+
+        public override async Task GetEventsByStation(StationRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
+        {
+            List<Event> events = db.Events.Where(x => x.StationId == request.StationId).ToList();
+
+            foreach (Event item in events)
+            {
+                await responseStream.WriteAsync(item);
+            }
+        }
+
+        public override Task<SuccessResponse> ChangePowerMeasurementUnit(IsMWRequest request, ServerCallContext context)
+        {
+            try
+            {
+                powerInMW = request.IsMW;
+                return Task.FromResult(new SuccessResponse()
+                {
+                    Success = true
+                });
+            }
+            catch
+            {
+                return Task.FromResult(new SuccessResponse()
+                {
+                    Success = false
+                });
+            }
+        }
+
     }
 }
+
