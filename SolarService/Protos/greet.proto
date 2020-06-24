@@ -14,22 +14,24 @@ service Greeter {
 
     rpc GetInvertorsOnStationAsync(InvertorsOnStationRequest) returns (stream Invertor);
     rpc GetAllInvertorsAsync(EmptyRequest) returns (stream Invertor);
-
+   
     rpc GetEventsAsync(EmptyRequest) returns (stream Event);
     rpc GetEventTypesAsync(EmptyRequest) returns (stream EventType);
     rpc GetEventsByTypeAsync(EventsByTypeRequest) returns (stream Event);
     rpc GetErrorTypesAsync(EmptyRequest) returns (stream ErrorType);
 
     rpc GetEventsByErrorCode(ErrorCodeRequest) returns (stream Event);
-    //rpc GetEventsByErrorType(ErrorTypeRequest) returns (stream Event); - not sure if needed
     rpc GetEventsByStation(StationRequest) returns (stream Event);
     rpc GetEventsByInvertor(InvertorRequest) returns (stream Event);
 
     rpc GetAllStationProducingStatisticsAsync(EmptyRequest) returns (stream StationProducingStatistic);
     rpc GetStationProducingStatisticAsync(StationProducingStatisticRequest) returns (stream StationProducingStatistic);
+    
+    rpc GetInvertorProducingStatisticsAsync(InvertorProducingStatisticRequest) returns (stream InvertorProducingStatistic);
 
-    rpc GetStationProducedEnergy(InvertorsOnStationRequest) returns (StationProducedEnergy);
-    rpc GetTotalProducedEnergy(EmptyRequest) returns (StationProducedEnergy);
+    rpc GetStationTotalStatisticsAsync(EmptyRequest) returns (stream TotalStationProductionStatistics);
+
+    rpc GetStatisticsChartImage(EmptyRequest) returns (ChartImage);
 
     rpc ChangePowerMeasurementUnit(IsMWRequest) returns (SuccessResponse);
 }
@@ -58,6 +60,13 @@ message InvertorProducingStatisticRequest{
     int64 fromDate = 1;
     int64 toDate = 2;
     repeated int32 invertorId = 3;
+}
+
+message MeteoStation {
+    int32 id = 1;
+    double temperature = 2;
+    double windSpeed = 3;
+    int32 stationId = 4;
 }
 
 message StationProducingStatisticRequest{
@@ -110,25 +119,28 @@ message SolarStation{
 message Invertor{
 	int32 id = 1;
 	string name = 2;
-    double power = 3;
+    double activePower = 3;
     double current = 4;
-    double voltage = 5;
-    double producedEnergy = 6;
-    double temperature = 7;
-    string state = 8;
-    int32 stationId = 9;
+    double AC = 5;
+    double DC = 6;
+    double ACStringVoltage = 7;
+    double DCStringVoltage = 8;
+    double producedEnergy = 9;
+    double temperature = 10;
+    double frequency = 11;
+    string state = 12;
+    int32 stationId = 13;
 }
 
 message Role{
     int32 id = 1;
     string name = 2;
-    bool rootRights = 3;
-    bool station1Pass = 4;
-    bool station2Pass = 5;
-    bool station3Pass = 6;
-    bool station4Pass = 7;
-    bool station5Pass = 8;
-    bool station6Pass = 9;
+    bool station1Pass = 3;
+    bool station2Pass = 4;
+    bool station3Pass = 5;
+    bool station4Pass = 6;
+    bool station5Pass = 7;
+    bool station6Pass = 8;
 }
 
 message User{
@@ -140,10 +152,11 @@ message User{
 
 message StationProducingStatistic{
     int32 id = 1;
-    double producedEnergy = 2;
-    double predictedProducing = 3;
-    int64 date = 4;
-    int32 stationId = 5;
+    double activePower = 2;
+    double producedEnergy = 3;
+    double predictedProducing = 4;
+    int64 date = 6;
+    int32 stationId = 7;
 }
 
 message InvertorProducingStatistic{
@@ -152,6 +165,7 @@ message InvertorProducingStatistic{
     double predictedProducing = 3;
     int64 date = 4;
     int32 invertorId = 5;
+    int32 stationId = 6;
 }
 
 message TelegramAuthorisedUser{
@@ -160,6 +174,17 @@ message TelegramAuthorisedUser{
     string userLogin = 3;
 }
 
-message StationProducedEnergy{
-    double energy = 1;
+message ChartImage{
+    int32 id = 1;
+    string image = 2;
+}
+
+message TotalStationProductionStatistics{
+    int32 stationId = 1;
+    double producedEnergy = 2;
+    double predictedProducing = 3;
+    double activePower = 4;
+    int32 errorCount = 5;
+    int64 dateFrom = 6;
+    int64 dateTo = 7;
 }

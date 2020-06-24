@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using Grpc.Core;
+using Microcharts;
 using Microsoft.Extensions.Logging;
 using SolarService.Models;
 
@@ -138,54 +142,6 @@ namespace SolarService
             }
         }
 
-        public override Task<StationProducedEnergy> GetStationProducedEnergy(InvertorsOnStationRequest request, ServerCallContext context)
-        {
-            List<Invertor> invertors = db.Invertors.Where(x => x.StationId == request.StationId).ToList();
-            double totalEnergyOnStation = 0;
-            foreach (Invertor item in invertors)
-            {
-                totalEnergyOnStation += item.ProducedEnergy;
-            }
-            if (powerInMW)
-            {
-                return Task.FromResult(new StationProducedEnergy()
-                {
-                    Energy = totalEnergyOnStation / 1000
-                });
-            }
-            else
-            {
-                return Task.FromResult(new StationProducedEnergy()
-                {
-                    Energy = totalEnergyOnStation
-                });
-            }
-        }
-
-        public override Task<StationProducedEnergy> GetTotalProducedEnergy(EmptyRequest request, ServerCallContext context)
-        {
-            List<Invertor> invertors = db.Invertors.ToList();
-            double totalEnergy = 0;
-            foreach (Invertor item in invertors)
-            {
-                totalEnergy += item.ProducedEnergy;
-            }
-            if (powerInMW)
-            {
-                return Task.FromResult(new StationProducedEnergy()
-                {
-                    Energy = totalEnergy / 1000
-                });
-            }
-            else
-            {
-                return Task.FromResult(new StationProducedEnergy()
-                {
-                    Energy = totalEnergy
-                });
-            }
-        }
-
         public override async Task GetErrorTypesAsync(EmptyRequest request, IServerStreamWriter<ErrorType> responseStream, ServerCallContext context)
         {
             List<ErrorType> errorTypes = db.ErrorTypes.ToList();
@@ -210,6 +166,7 @@ namespace SolarService
                 await responseStream.WriteAsync(item);
             }
         }
+
 
         public override async Task GetStationProducingStatisticAsync(StationProducingStatisticRequest request, IServerStreamWriter<StationProducingStatistic> responseStream, ServerCallContext context)
         {
@@ -273,6 +230,128 @@ namespace SolarService
                     Success = false
                 });
             }
+        }
+
+        public override async Task GetStationTotalStatisticsAsync(EmptyRequest request, IServerStreamWriter<TotalStationProductionStatistics> responseStream, ServerCallContext context)
+        {
+            List<StationProducingStatistic> statistics = db.StationProducingStatistics.ToList();
+
+            List<TotalStationProductionStatistics> totalStatistics = new List<TotalStationProductionStatistics>();
+            TotalStationProductionStatistics station1Statistics = new TotalStationProductionStatistics()
+            {
+                StationId = 1,
+                ErrorCount = db.Events.Where(x => x.StationId == 1).Count()
+            };
+            TotalStationProductionStatistics station2Statistics = new TotalStationProductionStatistics()
+            {
+                StationId = 2,
+                ErrorCount = db.Events.Where(x => x.StationId == 2).Count()
+            };
+            TotalStationProductionStatistics station3Statistics = new TotalStationProductionStatistics()
+            {
+                StationId = 3,
+                ErrorCount = db.Events.Where(x => x.StationId == 3).Count()
+            };
+            TotalStationProductionStatistics station4Statistics = new TotalStationProductionStatistics()
+            {
+                StationId = 4,
+                ErrorCount = db.Events.Where(x => x.StationId == 4).Count()
+            };
+            TotalStationProductionStatistics station5Statistics = new TotalStationProductionStatistics()
+            {
+                StationId = 5,
+                ErrorCount = db.Events.Where(x => x.StationId == 5).Count()
+            };
+            TotalStationProductionStatistics station6Statistics = new TotalStationProductionStatistics()
+            {
+                StationId = 6,
+                ErrorCount = db.Events.Where(x => x.StationId == 6).Count()
+            };
+            foreach (var item in statistics)
+            {
+                switch (item.StationId)
+                {
+                    case 1:
+                        station1Statistics.ProducedEnergy += item.ProducedEnergy;
+                        station1Statistics.PredictedProducing += item.PredictedProducing;
+                        station1Statistics.ActivePower += item.ActivePower;
+                        break;
+                    case 2:
+                        station2Statistics.ProducedEnergy += item.ProducedEnergy;
+                        station2Statistics.PredictedProducing += item.PredictedProducing;
+                        station2Statistics.ActivePower += item.ActivePower;
+                        break;
+                    case 3:
+                        station3Statistics.ProducedEnergy += item.ProducedEnergy;
+                        station3Statistics.PredictedProducing += item.PredictedProducing;
+                        station3Statistics.ActivePower += item.ActivePower;
+                        break;
+                    case 4:
+                        station4Statistics.ProducedEnergy += item.ProducedEnergy;
+                        station4Statistics.PredictedProducing += item.PredictedProducing;
+                        station4Statistics.ActivePower += item.ActivePower;
+                        break;
+                    case 5:
+                        station5Statistics.ProducedEnergy += item.ProducedEnergy;
+                        station5Statistics.PredictedProducing += item.PredictedProducing;
+                        station5Statistics.ActivePower += item.ActivePower;
+                        break;
+                    case 6:
+                        station6Statistics.ProducedEnergy += item.ProducedEnergy;
+                        station6Statistics.PredictedProducing += item.PredictedProducing;
+                        station6Statistics.ActivePower += item.ActivePower;
+                        break;
+                    default:
+                        _logger.LogError("Error on loading total station statistics");
+                        break;
+                }
+            }
+            totalStatistics.Add(station1Statistics);
+            totalStatistics.Add(station2Statistics);
+            totalStatistics.Add(station3Statistics);
+            totalStatistics.Add(station4Statistics);
+            totalStatistics.Add(station5Statistics);
+            totalStatistics.Add(station6Statistics);
+            foreach (var item in totalStatistics)
+            {
+                await responseStream.WriteAsync(item);
+            }
+        }
+
+        public override Task<ChartImage> GetStatisticsChartImage(EmptyRequest request, ServerCallContext context)
+        {
+            var statistics = db.StationProducingStatistics.ToList();
+            Entry[] chartEntries = new Entry[statistics.Count * 2];
+            int i = 0;
+            foreach(var item in statistics)
+            {
+                Entry tempProducing = new Entry((float)item.ProducedEnergy)
+                {
+                    Label = "Energy",
+                    ValueLabel = item.ProducedEnergy.ToString()
+                };
+                Entry tempPrediction = new Entry((float)item.PredictedProducing)
+                {
+                    Label = "Prediction",
+                    ValueLabel = item.PredictedProducing.ToString()
+                };
+                chartEntries[i++] = tempProducing;
+                chartEntries[i++] = tempPrediction;
+            }
+            LineChart chart = new LineChart() { Entries = chartEntries }; 
+            BinaryFormatter bf = new BinaryFormatter();
+            byte[] chartImage;
+            string res;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bf.Serialize(ms, chart);
+                chartImage = ms.ToArray();
+                res = chartImage.ToString();
+            };
+            return Task.FromResult(new ChartImage()
+            {
+                 Image = res
+            });
         }
 
     }

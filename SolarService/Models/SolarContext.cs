@@ -12,7 +12,7 @@ namespace SolarService.Models
     {
         public SolarContext()
         {
-            Database.EnsureCreatedAsync();
+            Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -60,28 +60,28 @@ namespace SolarService.Models
             modelBuilder.Entity<Invertor>().HasData(
                 new Invertor[]
                 {
-                new Invertor { Id=1, Name="Invertor1", Current=12.3, Power=100.5, ProducedEnergy=130.85, State="Working", StationId = st1.Id, Temperature=26.4, Voltage=20.9},
-                new Invertor { Id=2, Name="Invertor2", Current=16.3, Power=180.5, ProducedEnergy=160.85, State="Working", StationId = st1.Id, Temperature=29.4, Voltage=21.9},
-                
-                new Invertor { Id=3, Name="Invertor3", Current=17.3, Power=230.5, ProducedEnergy=110.85, State="Working", StationId = st2.Id, Temperature=29.0, Voltage=22.9},
-                new Invertor { Id=4, Name="Invertor4", Current=14.3, Power=170.5, ProducedEnergy=167.85, State="Working", StationId = st2.Id, Temperature=26.4, Voltage=20.9},
-                
-                new Invertor { Id=5, Name="Invertor5", Current=11.3, Power=210.5, ProducedEnergy=110.85, State="Working", StationId = st3.Id, Temperature=29.4, Voltage=21.9},
-                new Invertor { Id=6, Name="Invertor6", Current=19.3, Power=230.5, ProducedEnergy=251.85, State="Working", StationId = st3.Id, Temperature=29.0, Voltage=22.9},
-               
-                new Invertor { Id=7, Name="Invertor7", Current=21.3, Power=131.5, ProducedEnergy=190.85, State="Working", StationId = st4.Id, Temperature=29.4, Voltage=21.9},
-                new Invertor { Id=8, Name="Invertor8", Current=10.3, Power=262.5, ProducedEnergy=251.85, State="Working", StationId = st4.Id, Temperature=29.0, Voltage=22.9},
-                
-                new Invertor { Id=9, Name="Invertor9", Current=24.3, Power=350.5, ProducedEnergy=452.85, State="Working", StationId = st5.Id, Temperature=26.4, Voltage=20.9},
-                new Invertor { Id=10, Name="Invertor10", Current=12.3, Power=152.5, ProducedEnergy=453.85, State="Working", StationId = st5.Id, Temperature=29.4, Voltage=21.9},
-                
-                new Invertor { Id=11, Name="Invertor11", Current=15.3, Power=189.5, ProducedEnergy=165.85, State="Working", StationId = st6.Id, Temperature=29.4, Voltage=21.9},
-                new Invertor { Id=12, Name="Invertor12", Current=22.3, Power=250.5, ProducedEnergy=143.85, State="Working", StationId = st6.Id, Temperature=29.0, Voltage=22.9}
+                new Invertor { Id=1, Name="Invertor1", Current=12.3, ActivePower=100.5, ProducedEnergy=130.85, State="Working", StationId = st1.Id, Temperature=26.4, ACStringVoltage=20.9, DCStringVoltage=19.5, AC=16.3, DC=18.4, Frequency=12.0},
+                new Invertor { Id=2, Name="Invertor2", Current=16.3, ActivePower=180.5, ProducedEnergy=160.85, State="Working", StationId = st1.Id, Temperature=29.4, ACStringVoltage=21.9, DCStringVoltage=18.5, AC=16.3, DC=18.4, Frequency=12.0},
+
+                new Invertor { Id=3, Name="Invertor3", Current=17.3, ActivePower=230.5, ProducedEnergy=110.85, State="Working", StationId = st2.Id, Temperature=29.0, ACStringVoltage=22.9, DCStringVoltage=13.5, AC=16.3, DC=18.4, Frequency=12.0},
+                new Invertor { Id=4, Name="Invertor4", Current=14.3, ActivePower=170.5, ProducedEnergy=167.85, State="Working", StationId = st2.Id, Temperature=26.4, ACStringVoltage=20.9, DCStringVoltage=15.5, AC=16.3, DC=18.4, Frequency=12.0},
+
+                new Invertor { Id=5, Name="Invertor5", Current=11.3, ActivePower=210.5, ProducedEnergy=110.85, State="Working", StationId = st3.Id, Temperature=29.4, ACStringVoltage=21.9, DCStringVoltage=11.5, AC=16.3, DC=18.4, Frequency=12.0},
+                new Invertor { Id=6, Name="Invertor6", Current=19.3, ActivePower=230.5, ProducedEnergy=251.85, State="Working", StationId = st3.Id, Temperature=29.0, ACStringVoltage=22.9, DCStringVoltage=16.5, AC=16.3, DC=18.4, Frequency=12.0},
+
+                new Invertor { Id=7, Name="Invertor7", Current=21.3, ActivePower=131.5, ProducedEnergy=190.85, State="Working", StationId = st4.Id, Temperature=29.4, ACStringVoltage=21.9, DCStringVoltage=11.4, AC=16.3, DC=18.4, Frequency=12.0},
+                new Invertor { Id=8, Name="Invertor8", Current=10.3, ActivePower=262.5, ProducedEnergy=251.85, State="Working", StationId = st4.Id, Temperature=29.0, ACStringVoltage=22.9, DCStringVoltage=17.5, AC=16.3, DC=18.4, Frequency=12.0},
+
+                new Invertor { Id=9, Name="Invertor9", Current=24.3, ActivePower=350.5, ProducedEnergy=452.85, State="Working", StationId = st5.Id, Temperature=26.4, ACStringVoltage=20.9, DCStringVoltage=12.5, AC=16.3, DC=18.4, Frequency=12.0},
+                new Invertor { Id=10, Name="Invertor10", Current=12.3, ActivePower=152.5, ProducedEnergy=453.85, State="Working", StationId = st5.Id, Temperature=29.4, ACStringVoltage=21.9, DCStringVoltage=14.5, AC=16.3, DC=18.4, Frequency=12.0},
+
+                new Invertor { Id=11, Name="Invertor11", Current=15.3, ActivePower=189.5, ProducedEnergy=165.85, State="Working", StationId = st6.Id, Temperature=29.4, ACStringVoltage=21.9, DCStringVoltage=13.5, AC=16.3, DC=18.4, Frequency=12.0},
+                new Invertor { Id=12, Name="Invertor12", Current=22.3, ActivePower=250.5, ProducedEnergy=143.85, State="Working", StationId = st6.Id, Temperature=29.0, ACStringVoltage=22.9, DCStringVoltage=19.9, AC=16.3, DC=18.4, Frequency=12.0}
                 });
 
-            Role r1 = new Role() { Id = 1, Name = "Admin", RootRights = false, Station1Pass = true, Station2Pass = true, Station3Pass = true, Station4Pass = true, Station5Pass = true, Station6Pass = true };
-            Role r2 = new Role() { Id = 2, Name = "User", RootRights = false, Station1Pass = false, Station2Pass = true, Station3Pass = true, Station4Pass = true, Station5Pass = true, Station6Pass = true };
-                
+            Role r1 = new Role() { Id = 1, Name = "Admin", Station1Pass = true, Station2Pass = true, Station3Pass = true, Station4Pass = true, Station5Pass = true, Station6Pass = true };
+            Role r2 = new Role() { Id = 2, Name = "User", Station1Pass = false, Station2Pass = true, Station3Pass = true, Station4Pass = true, Station5Pass = true, Station6Pass = true };
+
             modelBuilder.Entity<Role>().HasData(
                  new Role[] { r1, r2 });
 
@@ -100,9 +100,21 @@ namespace SolarService.Models
                     new StationProducingStatistic { Id = 4, PredictedProducing = 4, ProducedEnergy = 4, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), StationId = 2 }
                 );
 
+            modelBuilder.Entity<MeteoStation>().HasData(
+                 new MeteoStation[]
+                 {
+                    new MeteoStation { Id=1, Temperature=25.6, WindSpeed=11.4, StationId = 1},
+                     new MeteoStation { Id=2, Temperature=34.3, WindSpeed=16.7, StationId = 2},
+                     new MeteoStation { Id=3, Temperature=13.4, WindSpeed=14.9, StationId = 3},
+                     new MeteoStation { Id=4, Temperature=24.9, WindSpeed=4.1, StationId = 4},
+                     new MeteoStation { Id=5, Temperature=29.7, WindSpeed=1.5, StationId = 5},
+                     new MeteoStation { Id=6, Temperature=20.5, WindSpeed=23.0, StationId = 6}
+                 });
+
         }
 
         public DbSet<SolarStation> SolarStations { get; set; }
+        public DbSet<MeteoStation> MeteoStations { get; set; }
         public DbSet<Invertor> Invertors { get; set; }
         public DbSet<EventType> EventTypes { get; set; }
         public DbSet<ErrorType> ErrorTypes { get; set; }
