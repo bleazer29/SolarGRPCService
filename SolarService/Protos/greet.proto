@@ -21,15 +21,12 @@ service Greeter {
     rpc GetErrorTypesAsync(EmptyRequest) returns (stream ErrorType);
 
     rpc GetEventsByErrorCode(ErrorCodeRequest) returns (stream Event);
-    rpc GetEventsByStation(StationRequest) returns (stream Event);
+    rpc GetEventsByStation(StationProducingStatisticRequest) returns (stream Event);
     rpc GetEventsByInvertor(InvertorRequest) returns (stream Event);
 
-    rpc GetAllStationProducingStatisticsAsync(EmptyRequest) returns (stream StationProducingStatistic);
-    rpc GetStationProducingStatisticAsync(StationProducingStatisticRequest) returns (stream StationProducingStatistic);
-    
-    rpc GetInvertorProducingStatisticsAsync(InvertorProducingStatisticRequest) returns (stream InvertorProducingStatistic);
-
-    rpc GetStationTotalStatisticsAsync(EmptyRequest) returns (stream TotalStationProductionStatistics);
+    rpc GetAllStationProducingStatisticsAsync(EmptyRequest) returns (stream InvertorProducingStatistic);
+    rpc GetStationProducingStatisticAsync(StationProducingStatisticRequest) returns (InvertorProducingStatistic);
+    rpc GetInvertorProducingStatisticsAsync(InvertorProducingStatisticRequest) returns (InvertorProducingStatistic);
 
     rpc GetStatisticsChartImage(EmptyRequest) returns (ChartImage);
 
@@ -48,17 +45,12 @@ message IsMWRequest{
     bool isMW = 1;
 }
 
-message StationRequest{
-    int32 stationId = 1;
-}
-
 message InvertorRequest{
     int32 invertorId = 1;
 }
 
 message InvertorProducingStatisticRequest{
     int64 fromDate = 1;
-    int64 toDate = 2;
     repeated int32 invertorId = 3;
 }
 
@@ -70,8 +62,7 @@ message MeteoStation {
 }
 
 message StationProducingStatisticRequest{
-    int64 fromDate = 1;
-    int64 toDate = 2;
+    int64 date = 1;
     int32 stationId = 3;
 }
 
@@ -150,22 +141,15 @@ message User{
     int32 roleId = 4;
 }
 
-message StationProducingStatistic{
-    int32 id = 1;
-    double activePower = 2;
-    double producedEnergy = 3;
-    double predictedProducing = 4;
-    int64 date = 6;
-    int32 stationId = 7;
-}
-
 message InvertorProducingStatistic{
     int32 id = 1;
     double producedEnergy = 2;
     double predictedProducing = 3;
-    int64 date = 4;
-    int32 invertorId = 5;
-    int32 stationId = 6;
+    double activePower = 4;
+    int32 errorCount = 5;
+    int64 date = 6;
+    int32 invertorId = 7;
+    int32 stationId = 8;
 }
 
 message TelegramAuthorisedUser{
@@ -177,14 +161,4 @@ message TelegramAuthorisedUser{
 message ChartImage{
     int32 id = 1;
     string image = 2;
-}
-
-message TotalStationProductionStatistics{
-    int32 stationId = 1;
-    double producedEnergy = 2;
-    double predictedProducing = 3;
-    double activePower = 4;
-    int32 errorCount = 5;
-    int64 dateFrom = 6;
-    int64 dateTo = 7;
 }

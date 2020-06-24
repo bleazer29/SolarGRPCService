@@ -11,11 +11,9 @@ namespace SolarService.Models
 {
     public class SolarContext : DbContext
     {
-        private readonly ILogger<GreeterService> _logger;
         public SolarContext()
         {
             Database.EnsureCreated();
-            _logger.LogInformation("Database created");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -96,11 +94,11 @@ namespace SolarService.Models
                 new User { Id=3, Login="user3", Password="pass3", RoleId = r2.Id}
                  });
 
-            modelBuilder.Entity<StationProducingStatistic>().HasData(
-                new StationProducingStatistic { Id = 1, ProducedEnergy = 1, PredictedProducing = 5, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-3).ToUniversalTime()), StationId = 1 },
-                    new StationProducingStatistic { Id = 2, PredictedProducing = 2, ProducedEnergy = 2, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 2 },
-                    new StationProducingStatistic { Id = 3, PredictedProducing = 3, ProducedEnergy = 3, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 2 },
-                    new StationProducingStatistic { Id = 4, PredictedProducing = 4, ProducedEnergy = 4, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), StationId = 2 }
+            modelBuilder.Entity<InvertorProducingStatistic>().HasData(
+                new InvertorProducingStatistic { Id = 1, ProducedEnergy = 14325, PredictedProducing = 54325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-3).ToUniversalTime()), StationId = 1 },
+                    new InvertorProducingStatistic { Id = 2, PredictedProducing = 24125, ProducedEnergy = 24325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 2 },
+                    new InvertorProducingStatistic { Id = 3, PredictedProducing = 3341, ProducedEnergy = 31235, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 2 },
+                    new InvertorProducingStatistic { Id = 4, PredictedProducing = 43425, ProducedEnergy = 44315, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), StationId = 2 }
                 );
 
             modelBuilder.Entity<MeteoStation>().HasData(
@@ -124,7 +122,7 @@ namespace SolarService.Models
         public DbSet<Event> Events { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<StationProducingStatistic> StationProducingStatistics { get; set; }
+        public DbSet<InvertorProducingStatistic> InvertorProducingStatistics { get; set; }
         public DbSet<TelegramAuthorisedUser> TelegramAuthorisedUsers { get; set; }
     }
 }

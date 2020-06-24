@@ -37,7 +37,7 @@ namespace SolarService
 
         private void UpdateTotalStatistics()
         {
-            foreach(var item in db.StationProducingStatistics.ToList())
+            foreach(var item in db.InvertorProducingStatistics.ToList())
             {
                 if (powerInMW)
                 {
@@ -182,11 +182,11 @@ namespace SolarService
             }
         }
 
-        public override async Task GetAllStationProducingStatisticsAsync(EmptyRequest request, IServerStreamWriter<StationProducingStatistic> responseStream, ServerCallContext context)
+        public override async Task GetAllStationProducingStatisticsAsync(EmptyRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
         {
-            List<StationProducingStatistic> errorTypes = db.StationProducingStatistics.ToList();
+            List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.ToList();
 
-            foreach (StationProducingStatistic item in errorTypes)
+            foreach (InvertorProducingStatistic item in statistics)
             {
                 if (powerInMW)
                 {
@@ -197,19 +197,23 @@ namespace SolarService
             }
         }
 
-        public override async Task GetStationProducingStatisticAsync(StationProducingStatisticRequest request, IServerStreamWriter<StationProducingStatistic> responseStream, ServerCallContext context)
+        public override Task<InvertorProducingStatistic> GetStationProducingStatisticAsync(StationProducingStatisticRequest request, ServerCallContext context)
         {
-            List<StationProducingStatistic> errorTypes = db.StationProducingStatistics.Where(x => x.StationId == request.StationId).ToList();
+            InvertorProducingStatistic statisticsNow = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId).First();
+            InvertorProducingStatistic statisticsOnRequestDate = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date == request.Date).First();
+            InvertorProducingStatistic statisticsResult = statisticsNow;
 
-            foreach (StationProducingStatistic item in errorTypes)
+            statisticsResult.PredictedProducing -= statisticsOnRequestDate.PredictedProducing;
+            statisticsResult.ActivePower -= statisticsOnRequestDate.ActivePower;
+            statisticsResult.ProducedEnergy -= statisticsOnRequestDate.ProducedEnergy;
+            statisticsResult.ErrorCount = db.Events.Where(x => x.StationId == statisticsResult.StationId && x.Date >= request.Date).Count();
+            if (powerInMW)
             {
-                if (powerInMW)
-                {
-                    item.ProducedEnergy /= 1000;
-                    item.PredictedProducing /= 1000;
-                }
-                await responseStream.WriteAsync(item);
+                statisticsResult.PredictedProducing /= 1000;
+                statisticsResult.ActivePower /= 1000;
+                statisticsResult.ProducedEnergy /= 1000;
             }
+            return Task.FromResult(statisticsResult);
         }
 
         public override async Task GetEventsByErrorCode(ErrorCodeRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
@@ -232,7 +236,7 @@ namespace SolarService
             }
         }
 
-        public override async Task GetEventsByStation(StationRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
+        public override async Task GetEventsByStation(StationProducingStatisticRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
             List<Event> events = db.Events.Where(x => x.StationId == request.StationId).ToList();
 
@@ -261,104 +265,9 @@ namespace SolarService
             }
         }
 
-        public override async Task GetStationTotalStatisticsAsync(EmptyRequest request, IServerStreamWriter<TotalStationProductionStatistics> responseStream, ServerCallContext context)
-        {
-            List<StationProducingStatistic> statistics = db.StationProducingStatistics.ToList();
-
-            List<TotalStationProductionStatistics> totalStatistics = new List<TotalStationProductionStatistics>();
-            TotalStationProductionStatistics station1Statistics = new TotalStationProductionStatistics()
-            {
-                StationId = 1,
-                ErrorCount = db.Events.Where(x => x.StationId == 1).Count()
-            };
-            TotalStationProductionStatistics station2Statistics = new TotalStationProductionStatistics()
-            {
-                StationId = 2,
-                ErrorCount = db.Events.Where(x => x.StationId == 2).Count()
-            };
-            TotalStationProductionStatistics station3Statistics = new TotalStationProductionStatistics()
-            {
-                StationId = 3,
-                ErrorCount = db.Events.Where(x => x.StationId == 3).Count()
-            };
-            TotalStationProductionStatistics station4Statistics = new TotalStationProductionStatistics()
-            {
-                StationId = 4,
-                ErrorCount = db.Events.Where(x => x.StationId == 4).Count()
-            };
-            TotalStationProductionStatistics station5Statistics = new TotalStationProductionStatistics()
-            {
-                StationId = 5,
-                ErrorCount = db.Events.Where(x => x.StationId == 5).Count()
-            };
-            TotalStationProductionStatistics station6Statistics = new TotalStationProductionStatistics()
-            {
-                StationId = 6,
-                ErrorCount = db.Events.Where(x => x.StationId == 6).Count()
-            };
-            foreach (var item in statistics)
-            {
-                switch (item.StationId)
-                {
-                    case 1:
-                        station1Statistics.ProducedEnergy += item.ProducedEnergy;
-                        station1Statistics.PredictedProducing += item.PredictedProducing;
-                        station1Statistics.ActivePower += item.ActivePower;
-                        break;
-                    case 2:
-                        station2Statistics.ProducedEnergy += item.ProducedEnergy;
-                        station2Statistics.PredictedProducing += item.PredictedProducing;
-                        station2Statistics.ActivePower += item.ActivePower;
-                        break;
-                    case 3:
-                        station3Statistics.ProducedEnergy += item.ProducedEnergy;
-                        station3Statistics.PredictedProducing += item.PredictedProducing;
-                        station3Statistics.ActivePower += item.ActivePower;
-                        break;
-                    case 4:
-                        station4Statistics.ProducedEnergy += item.ProducedEnergy;
-                        station4Statistics.PredictedProducing += item.PredictedProducing;
-                        station4Statistics.ActivePower += item.ActivePower;
-                        break;
-                    case 5:
-                        station5Statistics.ProducedEnergy += item.ProducedEnergy;
-                        station5Statistics.PredictedProducing += item.PredictedProducing;
-                        station5Statistics.ActivePower += item.ActivePower;
-                        break;
-                    case 6:
-                        station6Statistics.ProducedEnergy += item.ProducedEnergy;
-                        station6Statistics.PredictedProducing += item.PredictedProducing;
-                        station6Statistics.ActivePower += item.ActivePower;
-                        break;
-                    default:
-                        _logger.LogError("Error on loading total station statistics");
-                        break;
-                }
-            }
-            totalStatistics.Add(station1Statistics);
-            totalStatistics.Add(station2Statistics);
-            totalStatistics.Add(station3Statistics);
-            totalStatistics.Add(station4Statistics);
-            totalStatistics.Add(station5Statistics);
-            totalStatistics.Add(station6Statistics);
-            if (powerInMW)
-            {
-                foreach(var item in totalStatistics)
-                {
-                    item.ActivePower /= 1000;
-                    item.PredictedProducing /= 1000;
-                    item.ProducedEnergy /= 1000;
-                }
-            }
-            foreach (var item in totalStatistics)
-            {
-                await responseStream.WriteAsync(item);
-            }
-        }
-
         public override Task<ChartImage> GetStatisticsChartImage(EmptyRequest request, ServerCallContext context)
         {
-            var statistics = db.StationProducingStatistics.ToList();
+            var statistics = db.InvertorProducingStatistics.ToList();
             Entry[] chartEntries = new Entry[statistics.Count * 2];
             int i = 0;
             foreach(var item in statistics)
