@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
+using System.Timers;
 using Grpc.Core;
 using Microcharts;
 using Microsoft.Extensions.Logging;
@@ -16,10 +17,31 @@ namespace SolarService
     {
         private readonly ILogger<GreeterService> _logger;
         private readonly SolarContext db = new SolarContext();
+        private Timer changeDataTimer = new Timer(); // for testing purposes
         private bool powerInMW = true;
         public GreeterService(ILogger<GreeterService> logger)
         {
             _logger = logger;
+            if (!changeDataTimer.Enabled)
+            {
+                changeDataTimer.Interval = 60000;
+                changeDataTimer.Elapsed += UpdateChangingData;
+                changeDataTimer.Start();
+            }
+        }
+
+        private void UpdateChangingData(object sender, ElapsedEventArgs e)
+        {
+            UpdateTotalStatistics();
+        }
+
+        private void UpdateTotalStatistics()
+        {
+            foreach(var item in db.StationProducingStatistics.ToList())
+            {
+                item.ActivePower += 15;
+                item.ProducedEnergy += 14;
+            }
         }
 
         public override async Task GetUsersAsync(EmptyRequest request, IServerStreamWriter<User> responseStream, ServerCallContext context)
@@ -166,7 +188,6 @@ namespace SolarService
                 await responseStream.WriteAsync(item);
             }
         }
-
 
         public override async Task GetStationProducingStatisticAsync(StationProducingStatisticRequest request, IServerStreamWriter<StationProducingStatistic> responseStream, ServerCallContext context)
         {

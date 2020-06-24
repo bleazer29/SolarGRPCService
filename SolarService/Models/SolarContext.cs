@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SolarService.Misc;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,11 @@ namespace SolarService.Models
 {
     public class SolarContext : DbContext
     {
+        private readonly ILogger<GreeterService> _logger;
         public SolarContext()
         {
             Database.EnsureCreated();
+            _logger.LogInformation("Database created");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
