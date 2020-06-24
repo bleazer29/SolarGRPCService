@@ -39,8 +39,16 @@ namespace SolarService
         {
             foreach(var item in db.StationProducingStatistics.ToList())
             {
-                item.ActivePower += 1534;
-                item.ProducedEnergy += 1422;
+                if (powerInMW)
+                {
+                    item.ActivePower += 15343;
+                    item.ProducedEnergy += 14422;
+                }
+                else
+                {
+                    item.ActivePower += 1533;
+                    item.ProducedEnergy += 1442;
+                }
             }
         }
 
@@ -333,6 +341,15 @@ namespace SolarService
             totalStatistics.Add(station4Statistics);
             totalStatistics.Add(station5Statistics);
             totalStatistics.Add(station6Statistics);
+            if (powerInMW)
+            {
+                foreach(var item in totalStatistics)
+                {
+                    item.ActivePower /= 1000;
+                    item.PredictedProducing /= 1000;
+                    item.ProducedEnergy /= 1000;
+                }
+            }
             foreach (var item in totalStatistics)
             {
                 await responseStream.WriteAsync(item);
