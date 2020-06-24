@@ -92,6 +92,14 @@ namespace SolarService.Models
                 new User { Id=2, Login="user2", Password="pass2", RoleId = r2.Id},
                 new User { Id=3, Login="user3", Password="pass3", RoleId = r2.Id}
                  });
+
+            modelBuilder.Entity<StationProducingStatistic>().HasData(
+                new StationProducingStatistic { Id = 1, ProducedEnergy = 1, PredictedProducing = 5, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-3).ToUniversalTime()), StationId = 1 },
+                    new StationProducingStatistic { Id = 2, PredictedProducing = 2, ProducedEnergy = 2, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 2 },
+                    new StationProducingStatistic { Id = 3, PredictedProducing = 3, ProducedEnergy = 3, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 2 },
+                    new StationProducingStatistic { Id = 4, PredictedProducing = 4, ProducedEnergy = 4, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), StationId = 2 }
+                );
+
         }
 
         public DbSet<SolarStation> SolarStations { get; set; }

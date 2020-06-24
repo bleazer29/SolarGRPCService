@@ -118,7 +118,7 @@ namespace SolarService
             {
                 if (powerInMW)
                 {
-                    item.ProducedEnergy *= 1000;
+                    item.ProducedEnergy /= 1000;
                 }
                 await responseStream.WriteAsync(item);
             }
@@ -132,7 +132,7 @@ namespace SolarService
             {
                 if (powerInMW)
                 {
-                    item.ProducedEnergy *= 1000;
+                    item.ProducedEnergy /= 1000;
                 }
                 await responseStream.WriteAsync(item);
             }
@@ -150,7 +150,7 @@ namespace SolarService
             {
                 return Task.FromResult(new StationProducedEnergy()
                 {
-                    Energy = totalEnergyOnStation * 1000
+                    Energy = totalEnergyOnStation / 1000
                 });
             }
             else
@@ -174,7 +174,7 @@ namespace SolarService
             {
                 return Task.FromResult(new StationProducedEnergy()
                 {
-                    Energy = totalEnergy * 1000
+                    Energy = totalEnergy / 1000
                 });
             }
             else
@@ -204,7 +204,8 @@ namespace SolarService
             {
                 if (powerInMW)
                 {
-                    item.ProducedEnergy *= 1000;
+                    item.ProducedEnergy /= 1000;
+                    item.PredictedProducing /= 1000;
                 }
                 await responseStream.WriteAsync(item);
             }
@@ -218,7 +219,8 @@ namespace SolarService
             {
                 if (powerInMW)
                 {
-                    item.ProducedEnergy *= 1000;
+                    item.ProducedEnergy /= 1000;
+                    item.PredictedProducing /= 1000;
                 }
                 await responseStream.WriteAsync(item);
             }
