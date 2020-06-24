@@ -39,8 +39,8 @@ namespace SolarService
         {
             foreach(var item in db.StationProducingStatistics.ToList())
             {
-                item.ActivePower += 15;
-                item.ProducedEnergy += 14;
+                item.ActivePower += 1534;
+                item.ProducedEnergy += 1422;
             }
         }
 
