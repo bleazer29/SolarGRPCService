@@ -40,7 +40,8 @@ namespace SolarService.Models
                 new EventType[]
                 {
                 new EventType { Id=1, Name="Error"},
-                new EventType { Id=2, Name="Normal event"}
+                new EventType { Id=2, Name="Normal event"},
+                new EventType { Id=3, Name="Critical"}
                 });
 
             modelBuilder.Entity<ErrorType>().HasData(

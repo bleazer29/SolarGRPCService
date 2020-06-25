@@ -7,6 +7,7 @@ package greet;
 service Greeter {
     rpc GetUsersAsync(EmptyRequest) returns (stream User);
     rpc RemoveUser(TelegramAuthorisedUser) returns (SuccessResponse);
+    rpc AuthoriseUser(User) returns (SuccessResponse);
     rpc GetRolesAsync(EmptyRequest) returns (stream Role);
     rpc GetTelegramAuthorisedUsersAsync(EmptyRequest) returns (stream TelegramAuthorisedUser);
 
@@ -25,6 +26,7 @@ service Greeter {
     rpc GetEventsByInvertor(InvertorRequest) returns (stream Event);
 
     rpc GetAllStationProducingStatisticsAsync(EmptyRequest) returns (stream InvertorProducingStatistic);
+    rpc GetStationProducingStatisticPeriod(StationProducingStatisticRequest) returns (stream InvertorProducingStatistic);
     rpc GetStationProducingStatisticAsync(StationProducingStatisticRequest) returns (InvertorProducingStatistic);
     rpc GetInvertorProducingStatisticsAsync(InvertorProducingStatisticRequest) returns (InvertorProducingStatistic);
 
@@ -51,7 +53,7 @@ message InvertorRequest{
 
 message InvertorProducingStatisticRequest{
     int64 fromDate = 1;
-    repeated int32 invertorId = 3;
+    int32 invertorId = 3;
 }
 
 message MeteoStation {
