@@ -37,7 +37,7 @@ namespace SolarService
 
         private void UpdateTotalStatistics()
         {
-            foreach(var item in db.InvertorProducingStatistics.ToList())
+            foreach (var item in db.InvertorProducingStatistics.ToList())
             {
                 if (powerInMW)
                 {
@@ -243,14 +243,19 @@ namespace SolarService
         public override Task<InvertorProducingStatistic> GetAllStationsProducing(EmptyRequest request, ServerCallContext context)
         {
             InvertorProducingStatistic result = new InvertorProducingStatistic();
-            for(int i = 1; i < 6; i++)
+            for (int i = 1; i <= 6; i++)
             {
-                InvertorProducingStatistic stationResult = db.InvertorProducingStatistics.Where(x => x.StationId == i).Last();
-                stationResult.ErrorCount = db.Events.Where(x => x.StationId == i).Count();
-                result.ProducedEnergy += stationResult.ProducedEnergy;
-                result.PredictedProducing += stationResult.PredictedProducing;
-                result.ActivePower += stationResult.ActivePower;
-                result.ErrorCount += stationResult.ErrorCount;
+                InvertorProducingStatistic stationResult = null;
+                if (db.InvertorProducingStatistics.Where(x => x.StationId == i).ToList().Any())
+                    stationResult = db.InvertorProducingStatistics.Where(x => x.StationId == i).ToList().Last();
+                if (stationResult != null)
+                {
+                    stationResult.ErrorCount = db.Events.Where(x => x.StationId == i).Count();
+                    result.ProducedEnergy += stationResult.ProducedEnergy;
+                    result.PredictedProducing += stationResult.PredictedProducing;
+                    result.ActivePower += stationResult.ActivePower;
+                    result.ErrorCount += stationResult.ErrorCount;
+                }
             }
             if (powerInMW)
             {
@@ -263,21 +268,31 @@ namespace SolarService
 
         public override Task<InvertorProducingStatistic> GetStationProducingStatisticAsync(StationProducingStatisticRequest request, ServerCallContext context)
         {
-            InvertorProducingStatistic statisticsNow = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId).First();
-            InvertorProducingStatistic statisticsOnRequestDate = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date == request.Date).First();
-            InvertorProducingStatistic statisticsResult = statisticsNow;
+            InvertorProducingStatistic statisticsNow = null;
+            if (db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId).ToList().Any())
+                statisticsNow = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId).ToList().Last();
 
-            statisticsResult.PredictedProducing -= statisticsOnRequestDate.PredictedProducing;
-            statisticsResult.ActivePower -= statisticsOnRequestDate.ActivePower;
-            statisticsResult.ProducedEnergy -= statisticsOnRequestDate.ProducedEnergy;
-            statisticsResult.ErrorCount = db.Events.Where(x => x.StationId == statisticsResult.StationId && x.Date >= request.Date).Count();
-            if (powerInMW)
+            InvertorProducingStatistic statisticsOnRequestDate = null;
+            if (db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date == request.Date).ToList().Any())
+                statisticsOnRequestDate = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date == request.Date).ToList().Last();
+
+            InvertorProducingStatistic statisticsResult = statisticsNow;
+            if (statisticsResult != null && statisticsOnRequestDate != null)
             {
-                statisticsResult.PredictedProducing /= 1000;
-                statisticsResult.ActivePower /= 1000;
-                statisticsResult.ProducedEnergy /= 1000;
+                statisticsResult.PredictedProducing -= statisticsOnRequestDate.PredictedProducing;
+                statisticsResult.ActivePower -= statisticsOnRequestDate.ActivePower;
+                statisticsResult.ProducedEnergy -= statisticsOnRequestDate.ProducedEnergy;
+                statisticsResult.ErrorCount = db.Events.Where(x => x.StationId == statisticsResult.StationId && x.Date >= request.Date).Count();
+                if (powerInMW)
+                {
+                    statisticsResult.PredictedProducing /= 1000;
+                    statisticsResult.ActivePower /= 1000;
+                    statisticsResult.ProducedEnergy /= 1000;
+                }
+                return Task.FromResult(statisticsResult);
             }
-            return Task.FromResult(statisticsResult);
+
+            return Task.FromResult(new InvertorProducingStatistic());
         }
 
         public override Task<InvertorProducingStatistic> GetInvertorProducingStatisticsAsync(InvertorProducingStatisticRequest request, ServerCallContext context)
@@ -292,7 +307,7 @@ namespace SolarService
             return Task.FromResult(statisticsNow);
         }
 
-       
+
 
         public override async Task GetEventsByErrorCode(ErrorCodeRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
@@ -373,7 +388,7 @@ namespace SolarService
             var statistics = db.InvertorProducingStatistics.ToList();
             Entry[] chartEntries = new Entry[statistics.Count * 2];
             int i = 0;
-            foreach(var item in statistics)
+            foreach (var item in statistics)
             {
                 Entry tempProducing = new Entry((float)item.ProducedEnergy)
                 {
@@ -388,7 +403,7 @@ namespace SolarService
                 chartEntries[i++] = tempProducing;
                 chartEntries[i++] = tempPrediction;
             }
-            LineChart chart = new LineChart() { Entries = chartEntries }; 
+            LineChart chart = new LineChart() { Entries = chartEntries };
             BinaryFormatter bf = new BinaryFormatter();
             byte[] chartImage;
             string res;
@@ -400,7 +415,7 @@ namespace SolarService
             };
             return Task.FromResult(new ChartImage()
             {
-                 Image = res
+                Image = res
             });
         }
 
