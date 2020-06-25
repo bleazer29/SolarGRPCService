@@ -90,20 +90,27 @@ namespace SolarService.Models
                  }); 
 
             modelBuilder.Entity<InvertorProducingStatistic>().HasData(
-                new InvertorProducingStatistic { Id = 1, ProducedEnergy = 14325, PredictedProducing = 54325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-3).ToUniversalTime()), StationId = 1 },
-                    new InvertorProducingStatistic { Id = 2, PredictedProducing = 24125, ProducedEnergy = 24325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 1 },
-                    new InvertorProducingStatistic { Id = 3, PredictedProducing = 5341, ProducedEnergy = 31235, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 2 },
+                    new InvertorProducingStatistic { Id = 13, PredictedProducing = 34513, ProducedEnergy = 34251, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 1 },
+                    new InvertorProducingStatistic { Id = 2, PredictedProducing = 24125, ProducedEnergy = 32156, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 1 },
+                new InvertorProducingStatistic { Id = 1, ProducedEnergy = 14325, PredictedProducing = 23453, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-3).ToUniversalTime()), StationId = 1 },
+
+
+                    new InvertorProducingStatistic { Id = 14, PredictedProducing = 43251, ProducedEnergy = 48523, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), StationId = 2 },
+                    new InvertorProducingStatistic { Id = 3, PredictedProducing = 28356, ProducedEnergy = 45234, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 2 },
                     new InvertorProducingStatistic { Id = 4, PredictedProducing = 25224, ProducedEnergy = 24325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 2 },
-                    new InvertorProducingStatistic { Id = 5, PredictedProducing = 52341, ProducedEnergy = 31235, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 3 },
-                    new InvertorProducingStatistic { Id = 6, PredictedProducing = 64755, ProducedEnergy = 24325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 3 },
+
+                    new InvertorProducingStatistic { Id = 5, PredictedProducing = 76453, ProducedEnergy = 71111, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 3 },
+                    new InvertorProducingStatistic { Id = 6, PredictedProducing = 64755, ProducedEnergy = 65432, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 3 },
+
                     new InvertorProducingStatistic { Id = 7, PredictedProducing = 6324, ProducedEnergy = 31235, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 4 },
                     new InvertorProducingStatistic { Id = 8, PredictedProducing = 21413, ProducedEnergy = 24325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 4 },
-                    new InvertorProducingStatistic { Id = 9, PredictedProducing = 12356, ProducedEnergy = 31235, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 5 },
+
+                    new InvertorProducingStatistic { Id = 9, PredictedProducing = 28432, ProducedEnergy = 31235, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 5 },
                     new InvertorProducingStatistic { Id = 10, PredictedProducing = 23415, ProducedEnergy = 24325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 5 },
-                    new InvertorProducingStatistic { Id = 11, PredictedProducing = 23498, ProducedEnergy = 31235, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 6 },
-                    new InvertorProducingStatistic { Id = 12, PredictedProducing = 87125, ProducedEnergy = 24325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 6 },
-                    new InvertorProducingStatistic { Id = 13, PredictedProducing = 78043, ProducedEnergy = 31235, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 1 },
-                    new InvertorProducingStatistic { Id = 14, PredictedProducing = 91034, ProducedEnergy = 44315, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), StationId = 2 }
+
+                    new InvertorProducingStatistic { Id = 11, PredictedProducing = 65432, ProducedEnergy = 76435, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 6 },
+                    new InvertorProducingStatistic { Id = 12, PredictedProducing = 43256, ProducedEnergy = 43215, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 6 }
+
                 );
 
             modelBuilder.Entity<MeteoStation>().HasData(
