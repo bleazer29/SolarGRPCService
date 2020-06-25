@@ -27,7 +27,9 @@ service Greeter {
     rpc GetAllStationProducingStatisticsAsync(EmptyRequest) returns (stream InvertorProducingStatistic);
     rpc GetStationProducingStatisticPeriod(StationProducingStatisticRequest) returns (stream InvertorProducingStatistic);
     rpc GetStationProducingStatisticAsync(StationProducingStatisticRequest) returns (InvertorProducingStatistic);
+
     rpc GetInvertorProducingStatisticsAsync(InvertorProducingStatisticRequest) returns (InvertorProducingStatistic);
+    rpc GetInvertorProducingStatisticPeriod(InvertorProducingStatisticRequest) returns (stream InvertorProducingStatistic);
 
     rpc GetStatisticsChartImage(EmptyRequest) returns (ChartImage);
 

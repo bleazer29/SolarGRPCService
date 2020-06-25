@@ -206,7 +206,7 @@ namespace SolarService
 
         public override async Task GetStationProducingStatisticPeriod(StationProducingStatisticRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
         {
-            List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date == request.Date).ToList();
+            List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date >= request.Date).ToList();
 
             foreach (InvertorProducingStatistic item in statistics)
             {
@@ -303,6 +303,21 @@ namespace SolarService
                 {
                     Success = false
                 });
+            }
+        }
+
+        public override async Task GetInvertorProducingStatisticPeriod(InvertorProducingStatisticRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
+        {
+            List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.Where(x => x.InvertorId == request.InvertorId && x.Date >= request.FromDate).ToList();
+
+            foreach (InvertorProducingStatistic item in statistics)
+            {
+                if (powerInMW)
+                {
+                    item.ProducedEnergy /= 1000;
+                    item.PredictedProducing /= 1000;
+                }
+                await responseStream.WriteAsync(item);
             }
         }
 
