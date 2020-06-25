@@ -189,6 +189,12 @@ namespace SolarService
             }
         }
 
+        public override Task<ErrorType> GetErrorMessage(ErrorTypeRequest request, ServerCallContext context)
+        {
+            ErrorType result = db.ErrorTypes.Where(x => x.Id == request.ErrorTypeId).FirstOrDefault();
+            return Task.FromResult(result);
+        }
+
         public override async Task GetAllStationProducingStatisticsAsync(EmptyRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
         {
             List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.ToList();
@@ -219,6 +225,42 @@ namespace SolarService
             }
         }
 
+        public override async Task GetAllStationsProducingStatisticPeriod(PeriodRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
+        {
+            List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.Where(x => x.Date >= request.FromDate).ToList();
+
+            foreach (InvertorProducingStatistic item in statistics)
+            {
+                if (powerInMW)
+                {
+                    item.ProducedEnergy /= 1000;
+                    item.PredictedProducing /= 1000;
+                }
+                await responseStream.WriteAsync(item);
+            }
+        }
+
+        public override Task<InvertorProducingStatistic> GetAllStationsProducing(EmptyRequest request, ServerCallContext context)
+        {
+            InvertorProducingStatistic result = new InvertorProducingStatistic();
+            for(int i = 1; i < 6; i++)
+            {
+                InvertorProducingStatistic stationResult = db.InvertorProducingStatistics.Where(x => x.StationId == i).Last();
+                stationResult.ErrorCount = db.Events.Where(x => x.StationId == i).Count();
+                result.ProducedEnergy += stationResult.ProducedEnergy;
+                result.PredictedProducing += stationResult.PredictedProducing;
+                result.ActivePower += stationResult.ActivePower;
+                result.ErrorCount += stationResult.ErrorCount;
+            }
+            if (powerInMW)
+            {
+                result.PredictedProducing /= 1000;
+                result.ActivePower /= 1000;
+                result.ProducedEnergy /= 1000;
+            }
+            return Task.FromResult(result);
+        }
+
         public override Task<InvertorProducingStatistic> GetStationProducingStatisticAsync(StationProducingStatisticRequest request, ServerCallContext context)
         {
             InvertorProducingStatistic statisticsNow = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId).First();
@@ -240,22 +282,17 @@ namespace SolarService
 
         public override Task<InvertorProducingStatistic> GetInvertorProducingStatisticsAsync(InvertorProducingStatisticRequest request, ServerCallContext context)
         {
-            InvertorProducingStatistic statisticsNow = db.InvertorProducingStatistics.Where(x => x.Id == request.InvertorId).First();
-            InvertorProducingStatistic statisticsOnRequestDate = db.InvertorProducingStatistics.Where(x => x.StationId == request.InvertorId && x.Date == request.FromDate).First();
-            InvertorProducingStatistic statisticsResult = statisticsNow;
-
-            statisticsResult.PredictedProducing -= statisticsOnRequestDate.PredictedProducing;
-            statisticsResult.ActivePower -= statisticsOnRequestDate.ActivePower;
-            statisticsResult.ProducedEnergy -= statisticsOnRequestDate.ProducedEnergy;
-            statisticsResult.ErrorCount = db.Events.Where(x => x.StationId == statisticsResult.StationId && x.Date >= request.FromDate).Count();
+            InvertorProducingStatistic statisticsNow = db.InvertorProducingStatistics.Where(x => x.InvertorId == request.InvertorId && x.Date == request.FromDate).First();
             if (powerInMW)
             {
-                statisticsResult.PredictedProducing /= 1000;
-                statisticsResult.ActivePower /= 1000;
-                statisticsResult.ProducedEnergy /= 1000;
+                statisticsNow.PredictedProducing /= 1000;
+                statisticsNow.ActivePower /= 1000;
+                statisticsNow.ProducedEnergy /= 1000;
             }
-            return Task.FromResult(statisticsResult);
+            return Task.FromResult(statisticsNow);
         }
+
+       
 
         public override async Task GetEventsByErrorCode(ErrorCodeRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
@@ -280,6 +317,16 @@ namespace SolarService
         public override async Task GetEventsByStation(StationProducingStatisticRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
             List<Event> events = db.Events.Where(x => x.StationId == request.StationId).ToList();
+
+            foreach (Event item in events)
+            {
+                await responseStream.WriteAsync(item);
+            }
+        }
+
+        public override async Task GetAllStationsEventsPeriod(PeriodRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
+        {
+            List<Event> events = db.Events.Where(x => x.Date >= request.FromDate).ToList();
 
             foreach (Event item in events)
             {

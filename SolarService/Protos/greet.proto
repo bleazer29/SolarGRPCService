@@ -19,14 +19,18 @@ service Greeter {
     rpc GetEventTypesAsync(EmptyRequest) returns (stream EventType);
     rpc GetEventsByTypeAsync(EventsByTypeRequest) returns (stream Event);
     rpc GetErrorTypesAsync(EmptyRequest) returns (stream ErrorType);
+    rpc GetErrorMessage(ErrorTypeRequest) returns (ErrorType);
 
     rpc GetEventsByErrorCode(ErrorCodeRequest) returns (stream Event);
     rpc GetEventsByStation(StationProducingStatisticRequest) returns (stream Event);
+    rpc GetAllStationsEventsPeriod(PeriodRequest) returns (stream Event);
     rpc GetEventsByInvertor(InvertorRequest) returns (stream Event);
 
     rpc GetAllStationProducingStatisticsAsync(EmptyRequest) returns (stream InvertorProducingStatistic);
     rpc GetStationProducingStatisticPeriod(StationProducingStatisticRequest) returns (stream InvertorProducingStatistic);
     rpc GetStationProducingStatisticAsync(StationProducingStatisticRequest) returns (InvertorProducingStatistic);
+    rpc GetAllStationsProducingStatisticPeriod(PeriodRequest) returns (stream InvertorProducingStatistic);
+    rpc GetAllStationsProducing(EmptyRequest) returns (InvertorProducingStatistic);
 
     rpc GetInvertorProducingStatisticsAsync(InvertorProducingStatisticRequest) returns (InvertorProducingStatistic);
     rpc GetInvertorProducingStatisticPeriod(InvertorProducingStatisticRequest) returns (stream InvertorProducingStatistic);
@@ -48,8 +52,16 @@ message IsMWRequest{
     bool isMW = 1;
 }
 
+message PeriodRequest{
+    int64 fromDate = 1;
+}
+
 message InvertorRequest{
     int32 invertorId = 1;
+}
+
+message StationRequest{
+    int32 stationId = 1;
 }
 
 message InvertorProducingStatisticRequest{
