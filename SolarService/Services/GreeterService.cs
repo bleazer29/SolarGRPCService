@@ -101,16 +101,6 @@ namespace SolarService
 
         }
 
-        public override async Task GetRolesAsync(EmptyRequest request, IServerStreamWriter<Role> responseStream, ServerCallContext context)
-        {
-            List<Role> roles = db.Roles.ToList();
-
-            foreach (Role role in roles)
-            {
-                await responseStream.WriteAsync(role);
-            }
-        }
-
         public override async Task GetTelegramAuthorisedUsersAsync(EmptyRequest request, IServerStreamWriter<TelegramAuthorisedUser> responseStream, ServerCallContext context)
         {
             List<TelegramAuthorisedUser> users = db.TelegramAuthorisedUsers.ToList();

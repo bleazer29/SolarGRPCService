@@ -81,19 +81,13 @@ namespace SolarService.Models
                 new Invertor { Id=12, Name="Invertor12", Current=229.3, ActivePower=2150.5, ProducedEnergy=1433.85, State="Working", StationId = st6.Id, Temperature=29.0, ACStringVoltage=242.9, DCStringVoltage=219.9, AC=216.3, DC=218.4, Frequency=122.0}
                 });
 
-            Role r1 = new Role() { Id = 1, Name = "Admin", Station1Pass = true, Station2Pass = true, Station3Pass = true, Station4Pass = true, Station5Pass = true, Station6Pass = true };
-            Role r2 = new Role() { Id = 2, Name = "User", Station1Pass = false, Station2Pass = true, Station3Pass = true, Station4Pass = true, Station5Pass = true, Station6Pass = true };
-
-            modelBuilder.Entity<Role>().HasData(
-                 new Role[] { r1, r2 });
-
             modelBuilder.Entity<User>().HasData(
                  new User[]
                  {
-                new User { Id=1, Login="user1", Password="pass1", RoleId = r1.Id},
-                new User { Id=2, Login="user2", Password="pass2", RoleId = r2.Id},
-                new User { Id=3, Login="user3", Password="pass3", RoleId = r2.Id}
-                 });
+                new User { Id=1, Login="user1", Password="pass1", Station1Pass = true, Station2Pass = true, Station3Pass = true, Station4Pass = true, Station5Pass = true, Station6Pass = true},
+                new User { Id=2, Login="user2", Password="pass2", Station1Pass = true, Station2Pass = false, Station3Pass = true, Station4Pass = true, Station5Pass = true, Station6Pass = true},
+                new User { Id=3, Login="user3", Password="pass3", Station1Pass = false, Station2Pass = true, Station3Pass = true, Station4Pass = true, Station5Pass = true, Station6Pass = true}
+                 }); 
 
             modelBuilder.Entity<InvertorProducingStatistic>().HasData(
                 new InvertorProducingStatistic { Id = 1, ProducedEnergy = 14325, PredictedProducing = 54325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-3).ToUniversalTime()), StationId = 1 },
@@ -122,7 +116,6 @@ namespace SolarService.Models
         public DbSet<ErrorType> ErrorTypes { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public DbSet<InvertorProducingStatistic> InvertorProducingStatistics { get; set; }
         public DbSet<TelegramAuthorisedUser> TelegramAuthorisedUsers { get; set; }
     }

@@ -8,7 +8,6 @@ service Greeter {
     rpc GetUsersAsync(EmptyRequest) returns (stream User);
     rpc RemoveUser(TelegramAuthorisedUser) returns (SuccessResponse);
     rpc AuthoriseUser(User) returns (SuccessResponse);
-    rpc GetRolesAsync(EmptyRequest) returns (stream Role);
     rpc GetTelegramAuthorisedUsersAsync(EmptyRequest) returns (stream TelegramAuthorisedUser);
 
     rpc GetStationsAsync(EmptyRequest) returns (stream SolarStation);
@@ -125,22 +124,16 @@ message Invertor{
     int32 stationId = 13;
 }
 
-message Role{
-    int32 id = 1;
-    string name = 2;
-    bool station1Pass = 3;
-    bool station2Pass = 4;
-    bool station3Pass = 5;
-    bool station4Pass = 6;
-    bool station5Pass = 7;
-    bool station6Pass = 8;
-}
-
 message User{
     int32 id = 1;
     string login = 2;
     string password = 3;
-    int32 roleId = 4;
+    bool station1Pass = 5;
+    bool station2Pass = 6;
+    bool station3Pass = 7;
+    bool station4Pass = 8;
+    bool station5Pass = 9;
+    bool station6Pass = 10;
 }
 
 message InvertorProducingStatistic{
