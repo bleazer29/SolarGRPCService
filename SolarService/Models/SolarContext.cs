@@ -47,7 +47,7 @@ namespace SolarService.Models
             modelBuilder.Entity<ErrorType>().HasData(
                 new ErrorType[]
                 {
-                new ErrorType { Id=1, Name="Не поступает ток на инвертор"},
+                new ErrorType { Id=1, Name="Инвертор включён"},
                 new ErrorType { Id=2, Name="Слишком высокая температура инвертора" },
                 new ErrorType { Id=3, Name="Нет ответа от метеостанции" }
                 });
@@ -56,8 +56,8 @@ namespace SolarService.Models
                 new Event[]
                 {
                     new Event {Id=1, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), ErrorCode = 123, ErrorTypeId=2, EventTypeId=1, StationId=1, InvertorId=2 },
-                    new Event {Id=2, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), ErrorCode = 121, ErrorTypeId=1, EventTypeId=1, StationId=2, InvertorId=1 },
-                    new Event {Id=3, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), ErrorCode = 124, ErrorTypeId=3, EventTypeId=1, StationId=2 }
+                    new Event {Id=2, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), ErrorCode = 121, ErrorTypeId=1, EventTypeId=2, StationId=2, InvertorId=1 },
+                    new Event {Id=3, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), ErrorCode = 124, ErrorTypeId=3, EventTypeId=3, StationId=2 }
                 });
             modelBuilder.Entity<Invertor>().HasData(
                 new Invertor[]

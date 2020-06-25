@@ -277,11 +277,14 @@ namespace SolarService
                 statisticsOnRequestDate = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date == request.Date).ToList().Last();
 
             InvertorProducingStatistic statisticsResult = statisticsNow;
-            if (statisticsResult != null && statisticsOnRequestDate != null)
+            if (statisticsResult != null)
             {
-                statisticsResult.PredictedProducing -= statisticsOnRequestDate.PredictedProducing;
-                statisticsResult.ActivePower -= statisticsOnRequestDate.ActivePower;
-                statisticsResult.ProducedEnergy -= statisticsOnRequestDate.ProducedEnergy;
+                if(statisticsOnRequestDate != null)
+                {
+                    statisticsResult.PredictedProducing -= statisticsOnRequestDate.PredictedProducing;
+                    statisticsResult.ActivePower -= statisticsOnRequestDate.ActivePower;
+                    statisticsResult.ProducedEnergy -= statisticsOnRequestDate.ProducedEnergy;
+                }
                 statisticsResult.ErrorCount = db.Events.Where(x => x.StationId == statisticsResult.StationId && x.Date >= request.Date).Count();
                 if (powerInMW)
                 {
