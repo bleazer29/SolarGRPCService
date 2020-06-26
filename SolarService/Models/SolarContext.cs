@@ -90,9 +90,9 @@ namespace SolarService.Models
                  }); 
 
             modelBuilder.Entity<InvertorProducingStatistic>().HasData(
-                    new InvertorProducingStatistic { Id = 13, PredictedProducing = 34513, ProducedEnergy = 34251, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 1 },
-                    new InvertorProducingStatistic { Id = 2, PredictedProducing = 24125, ProducedEnergy = 32156, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 1 },
-                new InvertorProducingStatistic { Id = 1, ProducedEnergy = 14325, PredictedProducing = 23453, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-3).ToUniversalTime()), StationId = 1 },
+                    new InvertorProducingStatistic { Id = 13, AC = 224, DC = 246, ACStringVoltage = 266, DCStringVoltage = 274, ActivePower = 432, Current = 224, Frequency = 300, PredictedProducing = 34513, ProducedEnergy = 34251, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 1 },
+                    new InvertorProducingStatistic { Id = 2, AC = 255, DC = 210, ACStringVoltage = 256, DCStringVoltage = 254, ActivePower = 372, Current = 264, Frequency = 296, PredictedProducing = 24125, ProducedEnergy = 32156, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 1 },
+                new InvertorProducingStatistic { Id = 1, AC = 208, DC = 231, ACStringVoltage = 294, DCStringVoltage = 234, ActivePower = 322, Current = 234, Frequency = 276, ProducedEnergy = 14325, PredictedProducing = 23453, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-3).ToUniversalTime()), StationId = 1 },
 
 
                     new InvertorProducingStatistic { Id = 14, AC = 221, DC = 240, ACStringVoltage = 233, DCStringVoltage = 234, ActivePower = 322, Current = 234, Frequency = 235, PredictedProducing = 43251, ProducedEnergy = 48523, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), StationId = 2 },
