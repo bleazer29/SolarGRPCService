@@ -62,23 +62,23 @@ namespace SolarService.Models
             modelBuilder.Entity<Invertor>().HasData(
                 new Invertor[]
                 {
-                new Invertor { Id=1, Name="Invertor1", Current=123.3, ActivePower=1040.5, ProducedEnergy=1340.85, State="Working", StationId = st1.Id, Temperature=26.4, ACStringVoltage=203.9, DCStringVoltage=219.5, AC=216.3, DC=218.4, Frequency=122.0},
-                new Invertor { Id=2, Name="Invertor2", Current=164.3, ActivePower=1280.5, ProducedEnergy=1630.85, State="Working", StationId = st1.Id, Temperature=29.4, ACStringVoltage=221.9, DCStringVoltage=218.5, AC=216.3, DC=218.4, Frequency=142.0},
+                new Invertor { Id=1, Name="Invertor1", Current=123.3, ActivePower=1040.5, ProducedEnergy=1340.85, State="Working", StationId = 1, Temperature=26.4, ACStringVoltage=203.9, DCStringVoltage=219.5, AC=216.3, DC=218.4, Frequency=122.0},
+                new Invertor { Id=2, Name="Invertor2", Current=164.3, ActivePower=1280.5, ProducedEnergy=1630.85, State="Working", StationId = 1, Temperature=29.4, ACStringVoltage=221.9, DCStringVoltage=218.5, AC=216.3, DC=218.4, Frequency=142.0},
 
-                new Invertor { Id=3, Name="Invertor3", Current=117.3, ActivePower=2630.5, ProducedEnergy=1110.85, State="Working", StationId = st2.Id, Temperature=29.0, ACStringVoltage=212.9, DCStringVoltage=213.5, AC=216.3, DC=218.4, Frequency=182.0},
-                new Invertor { Id=4, Name="Invertor4", Current=143.3, ActivePower=1750.5, ProducedEnergy=1967.85, State="Working", StationId = st2.Id, Temperature=26.4, ACStringVoltage=270.9, DCStringVoltage=215.5, AC=216.3, DC=218.4, Frequency=152.0},
+                new Invertor { Id=3, Name="Invertor3", Current=117.3, ActivePower=2630.5, ProducedEnergy=1110.85, State="Working", StationId = 2, Temperature=29.0, ACStringVoltage=212.9, DCStringVoltage=213.5, AC=216.3, DC=218.4, Frequency=182.0},
+                new Invertor { Id=4, Name="Invertor4", Current=143.3, ActivePower=1750.5, ProducedEnergy=1967.85, State="Working", StationId = 2, Temperature=26.4, ACStringVoltage=270.9, DCStringVoltage=215.5, AC=216.3, DC=218.4, Frequency=152.0},
 
-                new Invertor { Id=5, Name="Invertor5", Current=131.3, ActivePower=2130.5, ProducedEnergy=1180.85, State="Working", StationId = st3.Id, Temperature=29.4, ACStringVoltage=241.9, DCStringVoltage=211.5, AC=216.3, DC=218.4, Frequency=152.0},
-                new Invertor { Id=6, Name="Invertor6", Current=129.3, ActivePower=2350.5, ProducedEnergy=2561.85, State="Working", StationId = st3.Id, Temperature=29.0, ACStringVoltage=252.9, DCStringVoltage=216.5, AC=216.3, DC=218.4, Frequency=162.0},
+                new Invertor { Id=5, Name="Invertor5", Current=131.3, ActivePower=2130.5, ProducedEnergy=1180.85, State="Working", StationId = 3, Temperature=29.4, ACStringVoltage=241.9, DCStringVoltage=211.5, AC=216.3, DC=218.4, Frequency=152.0},
+                new Invertor { Id=6, Name="Invertor6", Current=129.3, ActivePower=2350.5, ProducedEnergy=2561.85, State="Working", StationId = 3, Temperature=29.0, ACStringVoltage=252.9, DCStringVoltage=216.5, AC=216.3, DC=218.4, Frequency=162.0},
 
-                new Invertor { Id=7, Name="Invertor7", Current=251.3, ActivePower=1731.5, ProducedEnergy=1390.85, State="Working", StationId = st4.Id, Temperature=29.4, ACStringVoltage=271.9, DCStringVoltage=211.4, AC=216.3, DC=218.4, Frequency=142.0},
-                new Invertor { Id=8, Name="Invertor8", Current=170.3, ActivePower=2612.5, ProducedEnergy=2251.85, State="Working", StationId = st4.Id, Temperature=29.0, ACStringVoltage=282.9, DCStringVoltage=217.5, AC=216.3, DC=218.4, Frequency=412.0},
+                new Invertor { Id=7, Name="Invertor7", Current=251.3, ActivePower=1731.5, ProducedEnergy=1390.85, State="Working", StationId = 4, Temperature=29.4, ACStringVoltage=271.9, DCStringVoltage=211.4, AC=216.3, DC=218.4, Frequency=142.0},
+                new Invertor { Id=8, Name="Invertor8", Current=170.3, ActivePower=2612.5, ProducedEnergy=2251.85, State="Working", StationId = 4, Temperature=29.0, ACStringVoltage=282.9, DCStringVoltage=217.5, AC=216.3, DC=218.4, Frequency=412.0},
 
-                new Invertor { Id=9, Name="Invertor9", Current=244.3, ActivePower=3530.5, ProducedEnergy=4452.85, State="Working", StationId = st5.Id, Temperature=26.4, ACStringVoltage=240.9, DCStringVoltage=242.5, AC=216.3, DC=218.4, Frequency=162.0},
-                new Invertor { Id=10, Name="Invertor10", Current=112.3, ActivePower=1542.5, ProducedEnergy=4553.85, State="Working", StationId = st5.Id, Temperature=29.4, ACStringVoltage=212.9, DCStringVoltage=214.5, AC=216.3, DC=218.4, Frequency=152.0},
+                new Invertor { Id=9, Name="Invertor9", Current=244.3, ActivePower=3530.5, ProducedEnergy=4452.85, State="Working", StationId = 5, Temperature=26.4, ACStringVoltage=240.9, DCStringVoltage=242.5, AC=216.3, DC=218.4, Frequency=162.0},
+                new Invertor { Id=10, Name="Invertor10", Current=112.3, ActivePower=1542.5, ProducedEnergy=4553.85, State="Working", StationId = 5, Temperature=29.4, ACStringVoltage=212.9, DCStringVoltage=214.5, AC=216.3, DC=218.4, Frequency=152.0},
 
-                new Invertor { Id=11, Name="Invertor11", Current=195.3, ActivePower=1839.5, ProducedEnergy=4165.85, State="Working", StationId = st6.Id, Temperature=29.4, ACStringVoltage=221.9, DCStringVoltage=213.5, AC=216.3, DC=218.4, Frequency=142.0},
-                new Invertor { Id=12, Name="Invertor12", Current=229.3, ActivePower=2150.5, ProducedEnergy=1433.85, State="Working", StationId = st6.Id, Temperature=29.0, ACStringVoltage=242.9, DCStringVoltage=219.9, AC=216.3, DC=218.4, Frequency=122.0}
+                new Invertor { Id=11, Name="Invertor11", Current=195.3, ActivePower=1839.5, ProducedEnergy=4165.85, State="Working", StationId = 6, Temperature=29.4, ACStringVoltage=221.9, DCStringVoltage=213.5, AC=216.3, DC=218.4, Frequency=142.0},
+                new Invertor { Id=12, Name="Invertor12", Current=229.3, ActivePower=2150.5, ProducedEnergy=1433.85, State="Working", StationId = 6, Temperature=29.0, ACStringVoltage=242.9, DCStringVoltage=219.9, AC=216.3, DC=218.4, Frequency=122.0}
                 });
 
             modelBuilder.Entity<User>().HasData(
@@ -95,21 +95,21 @@ namespace SolarService.Models
                 new InvertorProducingStatistic { Id = 1, ProducedEnergy = 14325, PredictedProducing = 23453, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-3).ToUniversalTime()), StationId = 1 },
 
 
-                    new InvertorProducingStatistic { Id = 14, PredictedProducing = 43251, ProducedEnergy = 48523, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), StationId = 2 },
-                    new InvertorProducingStatistic { Id = 3, PredictedProducing = 28356, ProducedEnergy = 45234, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 2 },
-                    new InvertorProducingStatistic { Id = 4, PredictedProducing = 25224, ProducedEnergy = 24325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 2 },
+                    new InvertorProducingStatistic { Id = 14, AC = 221, DC = 240, ACStringVoltage = 233, DCStringVoltage = 234, ActivePower = 322, Current = 234, Frequency = 235, PredictedProducing = 43251, ProducedEnergy = 48523, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.ToUniversalTime()), StationId = 2 },
+                    new InvertorProducingStatistic { Id = 3, AC = 231, DC = 233, ACStringVoltage = 344, DCStringVoltage = 234, ActivePower = 332, Current = 354, Frequency = 233, PredictedProducing = 28356, ProducedEnergy = 45234, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 2 },
+                    new InvertorProducingStatistic { Id = 4, AC = 241, DC = 212, ACStringVoltage = 256, DCStringVoltage = 234, ActivePower = 554, Current = 322, Frequency = 254, PredictedProducing = 25224, ProducedEnergy = 24325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 2 },
 
-                    new InvertorProducingStatistic { Id = 5, PredictedProducing = 76453, ProducedEnergy = 71111, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 3 },
-                    new InvertorProducingStatistic { Id = 6, PredictedProducing = 64755, ProducedEnergy = 65432, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 3 },
+                    new InvertorProducingStatistic { Id = 5, AC = 211, DC = 243, ACStringVoltage = 382, DCStringVoltage = 234, ActivePower = 116, Current = 199, Frequency = 321, PredictedProducing = 76453, ProducedEnergy = 71111, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 3 },
+                    new InvertorProducingStatistic { Id = 6, AC = 201, DC = 255, ACStringVoltage = 221, DCStringVoltage = 234, ActivePower = 220, Current = 432, Frequency = 333, PredictedProducing = 64755, ProducedEnergy = 65432, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 3 },
 
-                    new InvertorProducingStatistic { Id = 7, PredictedProducing = 6324, ProducedEnergy = 31235, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 4 },
-                    new InvertorProducingStatistic { Id = 8, PredictedProducing = 21413, ProducedEnergy = 24325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 4 },
+                    new InvertorProducingStatistic { Id = 7, AC = 231, DC = 276, ACStringVoltage = 331, DCStringVoltage = 234, ActivePower = 324, Current = 342, Frequency = 321, PredictedProducing = 6324, ProducedEnergy = 31235, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 4 },
+                    new InvertorProducingStatistic { Id = 8, AC = 199, DC = 212, ACStringVoltage = 233, DCStringVoltage = 234, ActivePower = 444, Current = 333, Frequency = 331, PredictedProducing = 21413, ProducedEnergy = 24325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 4 },
 
-                    new InvertorProducingStatistic { Id = 9, PredictedProducing = 28432, ProducedEnergy = 31235, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 5 },
-                    new InvertorProducingStatistic { Id = 10, PredictedProducing = 23415, ProducedEnergy = 24325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 5 },
+                    new InvertorProducingStatistic { Id = 9, AC = 204, DC = 200, ACStringVoltage = 221, DCStringVoltage = 234, ActivePower = 321, Current = 213, Frequency = 432, PredictedProducing = 28432, ProducedEnergy = 31235, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 5 },
+                    new InvertorProducingStatistic { Id = 10, AC = 250, DC = 250, ACStringVoltage = 276, DCStringVoltage = 234, ActivePower = 223, Current = 111, Frequency = 438, PredictedProducing = 23415, ProducedEnergy = 24325, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 5 },
 
-                    new InvertorProducingStatistic { Id = 11, PredictedProducing = 65432, ProducedEnergy = 76435, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 6 },
-                    new InvertorProducingStatistic { Id = 12, PredictedProducing = 43256, ProducedEnergy = 43215, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 6 }
+                    new InvertorProducingStatistic { Id = 11, AC = 244, DC = 199, ACStringVoltage = 311, DCStringVoltage = 234, ActivePower = 240, Current = 321, Frequency = 193, PredictedProducing = 65432, ProducedEnergy = 76435, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-1).ToUniversalTime()), StationId = 6 },
+                    new InvertorProducingStatistic { Id = 12, AC = 254, DC = 216, ACStringVoltage = 290, DCStringVoltage = 234, ActivePower = 276, Current = 221, Frequency = 254, PredictedProducing = 43256, ProducedEnergy = 43215, Date = TimestampDateTimeConverter.DateTimeToUnixTimeStamp(DateTime.Now.AddDays(-2).ToUniversalTime()), StationId = 6 }
 
                 );
 

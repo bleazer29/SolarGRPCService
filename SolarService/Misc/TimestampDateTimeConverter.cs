@@ -8,9 +8,11 @@ namespace SolarService.Misc
 {
     public static class TimestampDateTimeConverter
     {
-        public static DateTime UnixTimeStampToDateTime(Timestamp unixTimeStamp)
+        public static DateTime UnixTimeStampToDateTime(long unixTimeStamp)
         {
-            DateTime dtDateTime = unixTimeStamp.ToDateTime();
+            Timestamp time = new Timestamp();
+            time.Seconds = unixTimeStamp;
+            DateTime dtDateTime = time.ToDateTime();
             return dtDateTime;
         }
 

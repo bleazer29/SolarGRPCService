@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
-using System.Timers;
 using Grpc.Core;
 using Microcharts;
 using Microsoft.Extensions.Logging;
@@ -17,39 +14,10 @@ namespace SolarService
     {
         private readonly ILogger<GreeterService> _logger;
         private readonly SolarContext db = new SolarContext();
-        private Timer changeDataTimer = new Timer(); // for testing purposes
         private bool powerInMW = true;
         public GreeterService(ILogger<GreeterService> logger)
         {
             _logger = logger;
-            if (!changeDataTimer.Enabled)
-            {
-                changeDataTimer.Interval = 60000;
-                changeDataTimer.Elapsed += UpdateChangingData;
-                changeDataTimer.Start();
-            }
-        }
-
-        private void UpdateChangingData(object sender, ElapsedEventArgs e)
-        {
-            UpdateTotalStatistics();
-        }
-
-        private void UpdateTotalStatistics()
-        {
-            foreach (var item in db.InvertorProducingStatistics.ToList())
-            {
-                if (powerInMW)
-                {
-                    item.ActivePower += 15343;
-                    item.ProducedEnergy += 14422;
-                }
-                else
-                {
-                    item.ActivePower += 1533;
-                    item.ProducedEnergy += 1442;
-                }
-            }
         }
 
         public override async Task GetUsersAsync(EmptyRequest request, IServerStreamWriter<User> responseStream, ServerCallContext context)
@@ -198,7 +166,7 @@ namespace SolarService
         public override async Task GetAllStationProducingStatisticsAsync(EmptyRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
         {
             List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.ToList();
-
+            
             foreach (InvertorProducingStatistic item in statistics)
             {
                 if (powerInMW)
@@ -213,7 +181,6 @@ namespace SolarService
         public override async Task GetStationProducingStatisticPeriod(StationProducingStatisticRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
         {
             List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date >= request.Date).ToList();
-
             foreach (InvertorProducingStatistic item in statistics)
             {
                 if (powerInMW)
@@ -300,7 +267,7 @@ namespace SolarService
 
         public override Task<InvertorProducingStatistic> GetInvertorProducingStatisticsAsync(InvertorProducingStatisticRequest request, ServerCallContext context)
         {
-            InvertorProducingStatistic statisticsNow = db.InvertorProducingStatistics.Where(x => x.InvertorId == request.InvertorId && x.Date == request.FromDate).First();
+            InvertorProducingStatistic statisticsNow = db.InvertorProducingStatistics.Where(x => x.InvertorId == request.InvertorId && x.Date >= request.FromDate).First();
             if (powerInMW)
             {
                 statisticsNow.PredictedProducing /= 1000;

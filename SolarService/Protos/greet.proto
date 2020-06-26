@@ -155,10 +155,16 @@ message InvertorProducingStatistic{
     double producedEnergy = 2;
     double predictedProducing = 3;
     double activePower = 4;
-    int32 errorCount = 5;
-    int64 date = 6;
-    int32 invertorId = 7;
-    int32 stationId = 8;
+    double current = 5;
+    double AC = 6;
+    double DC = 7;
+    double ACStringVoltage = 8;
+    double DCStringVoltage = 9;
+    double frequency = 10;
+    int32 errorCount = 11;
+    int64 date = 12;
+    int32 invertorId = 13;
+    int32 stationId = 14;
 }
 
 message TelegramAuthorisedUser{
