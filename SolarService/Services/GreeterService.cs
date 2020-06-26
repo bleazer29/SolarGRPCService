@@ -119,6 +119,12 @@ namespace SolarService
             }
         }
 
+        public override Task<MeteoStation> GetStationForecast(StationRequest request, ServerCallContext context)
+        {
+            var forecast = db.MeteoStations.Where(x => x.StationId == request.StationId).FirstOrDefault();
+            return Task.FromResult(forecast);
+        }
+
         public override async Task GetAllInvertorsAsync(EmptyRequest request, IServerStreamWriter<Invertor> responseStream, ServerCallContext context)
         {
             List<Invertor> invertors = db.Invertors.ToList();

@@ -12,6 +12,8 @@ service Greeter {
 
     rpc GetStationsAsync(EmptyRequest) returns (stream SolarStation);
 
+    rpc GetStationForecast(StationRequest) returns (MeteoStation);
+
     rpc GetInvertorsOnStationAsync(InvertorsOnStationRequest) returns (stream Invertor);
     rpc GetAllInvertorsAsync(EmptyRequest) returns (stream Invertor);
    
