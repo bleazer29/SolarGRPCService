@@ -13,6 +13,11 @@ namespace SolarService.Models
     {
         public SolarContext()
         {
+            try
+            {
+                Database.Migrate();
+            }
+            catch { }
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

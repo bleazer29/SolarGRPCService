@@ -31,13 +31,6 @@ namespace SolarService
 
             app.UseRouting();
 
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                using (var context = scope.ServiceProvider.GetService<SolarContext>())
-                {
-                    context.Database.Migrate();
-                }
-            }
 
             app.UseEndpoints(endpoints =>
             {
