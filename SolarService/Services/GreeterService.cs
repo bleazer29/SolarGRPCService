@@ -507,7 +507,7 @@ namespace SolarService
             {
                 List<Event> events = db.Events.Where(x => x.Date >= request.FromDate && x.Date <= request.ToDate).ToList();
 
-                FilterEvents(request, events);
+                events = FilterEvents(request, events);
 
                 foreach (Event item in events)
                 {
@@ -528,21 +528,30 @@ namespace SolarService
                 EventType type = db.EventTypes.Where(x => x.Name == request.EventType).FirstOrDefault();
                 events = events.Where(x => x.EventTypeId == type.Id).ToList();
             }
-            if (!string.IsNullOrEmpty(request.ErrorMessage))
-            {
-                ErrorType type = db.ErrorTypes.Where(x => x.Name == request.ErrorMessage).FirstOrDefault();
-                events = events.Where(x => x.ErrorTypeId == type.Id).ToList();
-            }
 
             if (!string.IsNullOrEmpty(request.StationName))
             {
                 SolarStation station = db.SolarStations.Where(x => x.Name == request.StationName).FirstOrDefault();
-                events = events.Where(x => x.StationId == station.Id).ToList();
+                if(station != null)
+                {
+                    events = events.Where(x => x.StationId == station.Id).ToList();
+                }
             }
             else if (!string.IsNullOrEmpty(request.InvertorName))
             {
                 Invertor invertor = db.Invertors.Where(x => x.Name == request.InvertorName).FirstOrDefault();
-                events = events.Where(x => x.StationId == invertor.Id).ToList();
+                if(invertor != null)
+                {
+                    events = events.Where(x => x.StationId == invertor.Id).ToList();
+                }
+            }
+            else if (!string.IsNullOrEmpty(request.ErrorMessage))
+            {
+                ErrorType type = db.ErrorTypes.Where(x => x.Name == request.ErrorMessage).FirstOrDefault();
+                if(type != null)
+                {
+                    events = events.Where(x => x.ErrorTypeId == type.Id).ToList();
+                }
             }
             return events;
         }
