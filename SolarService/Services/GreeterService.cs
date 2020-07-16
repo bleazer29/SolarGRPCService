@@ -523,9 +523,15 @@ namespace SolarService
 
         private List<Event> FilterEvents(EventsRequest request, List<Event> events)
         {
-            if (!string.IsNullOrEmpty(request.ErrorType))
+            if (!string.IsNullOrEmpty(request.EventType))
             {
-                ErrorType type = db.ErrorTypes.Where(x => x.Name == request.ErrorType).FirstOrDefault();
+                EventType type = db.EventTypes.Where(x => x.Name == request.EventType).FirstOrDefault();
+                events = events.Where(x => x.EventTypeId == type.Id).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(request.ErrorMessage))
+            {
+                ErrorType type = db.ErrorTypes.Where(x => x.Name == request.ErrorMessage).FirstOrDefault();
                 events = events.Where(x => x.ErrorTypeId == type.Id).ToList();
             }
 

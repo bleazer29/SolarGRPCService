@@ -62,7 +62,7 @@ message PeriodRequest{
 
 message EventsRequest{
     string errorMessage = 1;
-    string errorType = 2;
+    string eventType = 2;
     string stationName = 3;
     string invertorName = 4;
     int64 fromDate = 5;
