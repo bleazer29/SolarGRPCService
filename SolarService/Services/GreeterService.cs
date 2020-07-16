@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
-using SolarService.Models;
+using SolarService.Models;  
 
 namespace SolarService
 {
@@ -501,11 +501,13 @@ namespace SolarService
             }
         }
 
-        public override async Task GetAllStationsEventsPeriod(PeriodRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
+        public override async Task GetAllStationsEventsPeriod(EventsRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
             try
             {
                 List<Event> events = db.Events.Where(x => x.Date >= request.FromDate && x.Date <= request.ToDate).ToList();
+
+                FilterEvents(request, events);
 
                 foreach (Event item in events)
                 {
@@ -517,6 +519,27 @@ namespace SolarService
                 Console.WriteLine(ex.Message);
                 await responseStream.WriteAsync(new Event());
             }
+        }
+
+        private List<Event> FilterEvents(EventsRequest request, List<Event> events)
+        {
+            if (!string.IsNullOrEmpty(request.ErrorType))
+            {
+                ErrorType type = db.ErrorTypes.Where(x => x.Name == request.ErrorType).FirstOrDefault();
+                events = events.Where(x => x.ErrorTypeId == type.Id).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(request.StationName))
+            {
+                SolarStation station = db.SolarStations.Where(x => x.Name == request.StationName).FirstOrDefault();
+                events = events.Where(x => x.StationId == station.Id).ToList();
+            }
+            else if (!string.IsNullOrEmpty(request.InvertorName))
+            {
+                Invertor invertor = db.Invertors.Where(x => x.Name == request.InvertorName).FirstOrDefault();
+                events = events.Where(x => x.StationId == invertor.Id).ToList();
+            }
+            return events;
         }
 
         public override Task<SuccessResponse> ChangePowerMeasurementUnit(IsMWRequest request, ServerCallContext context)
