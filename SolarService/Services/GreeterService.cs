@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using Grpc.Core;
-using Microcharts;
 using Microsoft.Extensions.Logging;
 using SolarService.Models;
 
@@ -14,8 +13,8 @@ namespace SolarService
     public class GreeterService : Greeter.GreeterBase
     {
         private readonly ILogger<GreeterService> _logger;
-        private readonly SolarContext db = new SolarContext();
         private bool powerInMW = true;
+        private readonly SolarContext db = new SolarContext();
         public GreeterService(ILogger<GreeterService> logger)
         {
             _logger = logger;
@@ -316,7 +315,7 @@ namespace SolarService
         {
             try
             {
-                List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.Where(x => x.Date >= request.FromDate).ToList();
+                List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.Where(x => x.Date >= request.FromDate && x.Date <= request.ToDate).ToList();
 
                 foreach (InvertorProducingStatistic item in statistics)
                 {
@@ -405,7 +404,6 @@ namespace SolarService
                 Console.WriteLine(ex.Message);
             }
             return Task.FromResult(new InvertorProducingStatistic());
-
         }
 
         public override Task<InvertorProducingStatistic> GetInvertorProducingStatisticsAsync(InvertorProducingStatisticRequest request, ServerCallContext context)
@@ -428,8 +426,6 @@ namespace SolarService
             }
         }
 
-
-
         public override async Task GetEventsByErrorCode(ErrorCodeRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
             try
@@ -447,11 +443,32 @@ namespace SolarService
             }
         }
 
+        public override async Task GetEventsByErrorMessage(ErrorMessageRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
+        {
+            try
+            {
+                ErrorType type = db.ErrorTypes.Where(x => x.Name == request.Message).FirstOrDefault();
+                List<Event> events = db.Events.Where(x => x.ErrorTypeId == type.Id && (x.Date >= request.FromDate && x.Date <= request.ToDate)).ToList();
+
+                foreach (Event item in events)
+                {
+                    await responseStream.WriteAsync(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                await responseStream.WriteAsync(new Event());
+                Console.WriteLine(ex.Message);
+            }
+        }
+
         public override async Task GetEventsByInvertor(InvertorRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
             try
             {
-                List<Event> events = db.Events.Where(x => x.InvertorId == request.InvertorId).ToList();
+                Invertor inv = db.Invertors.Where(x => x.Name == request.InvertorName).FirstOrDefault();
+
+                List<Event> events = db.Events.Where(x => x.InvertorId == inv.Id && (x.Date >= request.FromDate && x.Date <= request.ToDate)).ToList();
 
                 foreach (Event item in events)
                 {
@@ -465,11 +482,12 @@ namespace SolarService
             }
         }
 
-        public override async Task GetEventsByStation(StationProducingStatisticRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
+        public override async Task GetEventsByStation(StationEventsRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
             try
             {
-                List<Event> events = db.Events.Where(x => x.StationId == request.StationId).ToList();
+                SolarStation station = db.SolarStations.Where(x => x.Name == request.StationName).FirstOrDefault();
+                List<Event> events = db.Events.Where(x => x.StationId == station.Id && (x.Date >= request.FromDate && x.Date <= request.ToDate)).ToList();
 
                 foreach (Event item in events)
                 {
@@ -487,7 +505,7 @@ namespace SolarService
         {
             try
             {
-                List<Event> events = db.Events.Where(x => x.Date >= request.FromDate).ToList();
+                List<Event> events = db.Events.Where(x => x.Date >= request.FromDate && x.Date <= request.ToDate).ToList();
 
                 foreach (Event item in events)
                 {
@@ -542,42 +560,6 @@ namespace SolarService
                 await responseStream.WriteAsync(new InvertorProducingStatistic());
             }
         }
-
-        //public override Task<ChartImage> GetStatisticsChartImage(EmptyRequest request, ServerCallContext context)
-        //{
-        //    var statistics = db.InvertorProducingStatistics.ToList();
-        //    Entry[] chartEntries = new Entry[statistics.Count * 2];
-        //    int i = 0;
-        //    foreach (var item in statistics)
-        //    {
-        //        Entry tempProducing = new Entry((float)item.ProducedEnergy)
-        //        {
-        //            Label = "Energy",
-        //            ValueLabel = item.ProducedEnergy.ToString()
-        //        };
-        //        Entry tempPrediction = new Entry((float)item.PredictedProducing)
-        //        {
-        //            Label = "Prediction",
-        //            ValueLabel = item.PredictedProducing.ToString()
-        //        };
-        //        chartEntries[i++] = tempProducing;
-        //        chartEntries[i++] = tempPrediction;
-        //    }
-        //    LineChart chart = new LineChart() { Entries = chartEntries };
-        //    BinaryFormatter bf = new BinaryFormatter();
-        //    byte[] chartImage;
-        //    string res;
-        //    using (MemoryStream ms = new MemoryStream())
-        //    {
-        //        bf.Serialize(ms, chart);
-        //        chartImage = ms.ToArray();
-        //        res = chartImage.ToString();
-        //    };
-        //    return Task.FromResult(new ChartImage()
-        //    {
-        //        Image = res
-        //    });
-        //}
 
     }
 }

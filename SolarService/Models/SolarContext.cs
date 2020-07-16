@@ -13,14 +13,7 @@ namespace SolarService.Models
     {
         public SolarContext()
         {
-            try
-            {
-                Database.EnsureCreated();
-            }
-            catch
-            {
-                Database.EnsureCreated();
-            }
+            Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
