@@ -13,14 +13,21 @@ namespace SolarService.Models
     {
         public SolarContext()
         {
-            Database.EnsureCreated();
+            try
+            {
+                Database.EnsureCreated();
+            }
+            catch
+            {
+
+            }
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=SolarDb;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer(@"Server=IL707;Database=SolarDb;Trusted_Connection=True;");
             }
         }
 
