@@ -488,7 +488,7 @@ namespace SolarService
             try
             {
                 SolarStation station = DatabaseData.GetInstance().db.SolarStations.Where(x => x.Name == request.StationName).FirstOrDefault();
-                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.StationId == station.Id).ToList();
+                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.StationId == station.Id && (x.Date >= request.FromDate && x.Date <= request.ToDate)).ToList();
 
                 foreach (Event item in events)
                 {
