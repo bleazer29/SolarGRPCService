@@ -24,7 +24,6 @@ service Greeter {
     rpc GetErrorMessage(ErrorTypeRequest) returns (ErrorType);
 
     rpc GetEventsByErrorCode(ErrorCodeRequest) returns (stream Event);
-    rpc GetEventsByErrorMessage(ErrorMessageRequest) returns (stream Event);
     rpc GetEventsByStation(StationProducingStatisticRequest) returns (stream Event);
     rpc GetAllStationsEventsPeriod(PeriodRequest) returns (stream Event);
     rpc GetEventsByInvertor(InvertorRequest) returns (stream Event);
@@ -57,13 +56,10 @@ message IsMWRequest{
 
 message PeriodRequest{
     int64 fromDate = 1;
-    int64 toDate = 2;
 }
 
 message InvertorRequest{
-    string invertorName = 1;
-    int64 fromDate = 2;
-    int64 toDate = 3;
+    int32 invertorId = 1;
 }
 
 message StationRequest{
@@ -97,14 +93,6 @@ message EventsByTypeRequest{
 
 message ErrorCodeRequest{
     int64 code = 1;
-    int64 fromDate = 2;
-    int64 toDate = 3;
-}
-
-message ErrorMessageRequest{
-    string message = 1;
-    int64 fromDate = 2;
-    int64 toDate = 3;
 }
 
 message ErrorTypeRequest{

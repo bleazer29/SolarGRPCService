@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using Grpc.Core;
-using Microcharts;
 using Microsoft.Extensions.Logging;
 using SolarService.Models;
 using SolarService.Database;
@@ -316,7 +315,7 @@ namespace SolarService
         {
             try
             {
-                List<InvertorProducingStatistic> statistics = DatabaseData.GetInstance().db.InvertorProducingStatistics.Where(x => x.Date >= request.FromDate).ToList();
+                List<InvertorProducingStatistic> statistics = DatabaseData.GetInstance().db.InvertorProducingStatistics.Where(x => x.Date >= request.FromDate && x.Date <= request.ToDate).ToList();
 
                 foreach (InvertorProducingStatistic item in statistics)
                 {
@@ -428,8 +427,6 @@ namespace SolarService
             }
         }
 
-
-
         public override async Task GetEventsByErrorCode(ErrorCodeRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
             try
@@ -447,11 +444,32 @@ namespace SolarService
             }
         }
 
+        public override async Task GetEventsByErrorMessage(ErrorMessageRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
+        {
+            try
+            {
+                ErrorType type = DatabaseData.GetInstance().db.ErrorTypes.Where(x => x.Name == request.Message).FirstOrDefault();
+                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.ErrorTypeId == type.Id && (x.Date >= request.FromDate && x.Date <= request.ToDate)).ToList();
+
+                foreach (Event item in events)
+                {
+                    await responseStream.WriteAsync(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                await responseStream.WriteAsync(new Event());
+                Console.WriteLine(ex.Message);
+            }
+        }
+
         public override async Task GetEventsByInvertor(InvertorRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
             try
             {
-                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.InvertorId == request.InvertorId).ToList();
+                Invertor inv = DatabaseData.GetInstance().db.Invertors.Where(x => x.Name == request.InvertorName).FirstOrDefault();
+
+                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.InvertorId == inv.Id && (x.Date >= request.FromDate && x.Date <= request.ToDate)).ToList();
 
                 foreach (Event item in events)
                 {
@@ -487,7 +505,7 @@ namespace SolarService
         {
             try
             {
-                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.Date >= request.FromDate).ToList();
+                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.Date >= request.FromDate && x.Date <= request.ToDate).ToList();
 
                 foreach (Event item in events)
                 {
