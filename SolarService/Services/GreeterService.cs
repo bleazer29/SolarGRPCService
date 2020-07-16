@@ -8,13 +8,13 @@ using Grpc.Core;
 using Microcharts;
 using Microsoft.Extensions.Logging;
 using SolarService.Models;
+using SolarService.Database;
 
 namespace SolarService
 {
     public class GreeterService : Greeter.GreeterBase
     {
         private readonly ILogger<GreeterService> _logger;
-        private readonly SolarContext db = new SolarContext();
         private bool powerInMW = true;
         public GreeterService(ILogger<GreeterService> logger)
         {
@@ -25,7 +25,7 @@ namespace SolarService
         {
             try
             {
-                List<User> users = db.Users.ToList();
+                List<User> users = DatabaseData.GetInstance().db.Users.ToList();
 
                 foreach (User user in users)
                 {
@@ -43,9 +43,9 @@ namespace SolarService
         {
             try
             {
-                db.TelegramAuthorisedUsers.Remove(request);
-                User temp = db.Users.Where(x => x.Login == request.UserLogin).First();
-                db.Users.Remove(temp);
+                DatabaseData.GetInstance().db.TelegramAuthorisedUsers.Remove(request);
+                User temp = DatabaseData.GetInstance().db.Users.Where(x => x.Login == request.UserLogin).First();
+                DatabaseData.GetInstance().db.Users.Remove(temp);
                 return Task.FromResult(new SuccessResponse()
                 {
                     Success = true
@@ -64,7 +64,7 @@ namespace SolarService
         {
             try
             {
-                bool userExists = db.Users.Where(x => x.Login == request.Login && x.Password == request.Password).Any();
+                bool userExists = DatabaseData.GetInstance().db.Users.Where(x => x.Login == request.Login && x.Password == request.Password).Any();
                 if (userExists)
                 {
                     return Task.FromResult(new SuccessResponse()
@@ -91,7 +91,7 @@ namespace SolarService
         {
             try
             {
-                List<TelegramAuthorisedUser> users = db.TelegramAuthorisedUsers.ToList();
+                List<TelegramAuthorisedUser> users = DatabaseData.GetInstance().db.TelegramAuthorisedUsers.ToList();
 
                 foreach (TelegramAuthorisedUser user in users)
                 {
@@ -109,7 +109,7 @@ namespace SolarService
         {
             try
             {
-                List<Event> events = db.Events.ToList();
+                List<Event> events = DatabaseData.GetInstance().db.Events.ToList();
 
                 foreach (Event item in events)
                 {
@@ -127,7 +127,7 @@ namespace SolarService
         {
             try
             {
-                List<EventType> eventTypes = db.EventTypes.ToList();
+                List<EventType> eventTypes = DatabaseData.GetInstance().db.EventTypes.ToList();
 
                 foreach (EventType item in eventTypes)
                 {
@@ -145,7 +145,7 @@ namespace SolarService
         {
             try
             {
-                List<Event> events = db.Events.Where(x => x.EventTypeId == request.TypeId).ToList();
+                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.EventTypeId == request.TypeId).ToList();
 
                 foreach (Event item in events)
                 {
@@ -163,7 +163,7 @@ namespace SolarService
         {
             try
             {
-                List<SolarStation> stations = db.SolarStations.ToList();
+                List<SolarStation> stations = DatabaseData.GetInstance().db.SolarStations.ToList();
 
                 foreach (SolarStation item in stations)
                 {
@@ -181,7 +181,7 @@ namespace SolarService
         {
             try
             {
-                var forecast = db.MeteoStations.Where(x => x.StationId == request.StationId).FirstOrDefault();
+                var forecast = DatabaseData.GetInstance().db.MeteoStations.Where(x => x.StationId == request.StationId).FirstOrDefault();
                 return Task.FromResult(forecast);
             }
             catch (Exception ex)
@@ -195,7 +195,7 @@ namespace SolarService
         {
             try
             {
-                List<Invertor> invertors = db.Invertors.ToList();
+                List<Invertor> invertors = DatabaseData.GetInstance().db.Invertors.ToList();
 
                 foreach (Invertor item in invertors)
                 {
@@ -217,7 +217,7 @@ namespace SolarService
         {
             try
             {
-                List<Invertor> invertors = db.Invertors.Where(x => x.StationId == request.StationId).ToList();
+                List<Invertor> invertors = DatabaseData.GetInstance().db.Invertors.Where(x => x.StationId == request.StationId).ToList();
 
                 foreach (Invertor item in invertors)
                 {
@@ -239,7 +239,7 @@ namespace SolarService
         {
             try
             {
-                List<ErrorType> errorTypes = db.ErrorTypes.ToList();
+                List<ErrorType> errorTypes = DatabaseData.GetInstance().db.ErrorTypes.ToList();
 
                 foreach (ErrorType item in errorTypes)
                 {
@@ -257,7 +257,7 @@ namespace SolarService
         {
             try
             {
-                ErrorType result = db.ErrorTypes.Where(x => x.Id == request.ErrorTypeId).FirstOrDefault();
+                ErrorType result = DatabaseData.GetInstance().db.ErrorTypes.Where(x => x.Id == request.ErrorTypeId).FirstOrDefault();
                 return Task.FromResult(result);
             }
             catch (Exception ex)
@@ -272,7 +272,7 @@ namespace SolarService
         {
             try
             {
-                List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.ToList();
+                List<InvertorProducingStatistic> statistics = DatabaseData.GetInstance().db.InvertorProducingStatistics.ToList();
 
                 foreach (InvertorProducingStatistic item in statistics)
                 {
@@ -294,7 +294,7 @@ namespace SolarService
         public override async Task GetStationProducingStatisticPeriod(StationProducingStatisticRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
         {try
             {
-                List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date >= request.Date).ToList();
+                List<InvertorProducingStatistic> statistics = DatabaseData.GetInstance().db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date >= request.Date).ToList();
                 foreach (InvertorProducingStatistic item in statistics)
                 {
                     if (powerInMW)
@@ -316,7 +316,7 @@ namespace SolarService
         {
             try
             {
-                List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.Where(x => x.Date >= request.FromDate).ToList();
+                List<InvertorProducingStatistic> statistics = DatabaseData.GetInstance().db.InvertorProducingStatistics.Where(x => x.Date >= request.FromDate).ToList();
 
                 foreach (InvertorProducingStatistic item in statistics)
                 {
@@ -343,11 +343,11 @@ namespace SolarService
                 for (int i = 1; i <= 6; i++)
                 {
                     InvertorProducingStatistic stationResult = null;
-                    if (db.InvertorProducingStatistics.Where(x => x.StationId == i).ToList().Any())
-                        stationResult = db.InvertorProducingStatistics.Where(x => x.StationId == i).ToList().Last();
+                    if (DatabaseData.GetInstance().db.InvertorProducingStatistics.Where(x => x.StationId == i).ToList().Any())
+                        stationResult = DatabaseData.GetInstance().db.InvertorProducingStatistics.Where(x => x.StationId == i).ToList().Last();
                     if (stationResult != null)
                     {
-                        stationResult.ErrorCount = db.Events.Where(x => x.StationId == i).Count();
+                        stationResult.ErrorCount = DatabaseData.GetInstance().db.Events.Where(x => x.StationId == i).Count();
                         result.ProducedEnergy += stationResult.ProducedEnergy;
                         result.PredictedProducing += stationResult.PredictedProducing;
                         result.ActivePower += stationResult.ActivePower;
@@ -374,12 +374,12 @@ namespace SolarService
             try
             {
                 InvertorProducingStatistic statisticsNow = null;
-                if (db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId).ToList().Any())
-                    statisticsNow = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId).ToList().Last();
+                if (DatabaseData.GetInstance().db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId).ToList().Any())
+                    statisticsNow = DatabaseData.GetInstance().db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId).ToList().Last();
 
                 InvertorProducingStatistic statisticsOnRequestDate = null;
-                if (db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date == request.Date).ToList().Any())
-                    statisticsOnRequestDate = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date == request.Date).ToList().Last();
+                if (DatabaseData.GetInstance().db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date == request.Date).ToList().Any())
+                    statisticsOnRequestDate = DatabaseData.GetInstance().db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date == request.Date).ToList().Last();
 
                 InvertorProducingStatistic statisticsResult = statisticsNow;
                 if (statisticsResult != null)
@@ -390,7 +390,7 @@ namespace SolarService
                         statisticsResult.ActivePower -= statisticsOnRequestDate.ActivePower;
                         statisticsResult.ProducedEnergy -= statisticsOnRequestDate.ProducedEnergy;
                     }
-                    statisticsResult.ErrorCount = db.Events.Where(x => x.StationId == statisticsResult.StationId && x.Date >= request.Date).Count();
+                    statisticsResult.ErrorCount = DatabaseData.GetInstance().db.Events.Where(x => x.StationId == statisticsResult.StationId && x.Date >= request.Date).Count();
                     if (powerInMW)
                     {
                         statisticsResult.PredictedProducing /= 1000;
@@ -412,7 +412,7 @@ namespace SolarService
         {
             try
             {
-                InvertorProducingStatistic statisticsNow = db.InvertorProducingStatistics.Where(x => x.InvertorId == request.InvertorId && x.Date >= request.FromDate).First();
+                InvertorProducingStatistic statisticsNow = DatabaseData.GetInstance().db.InvertorProducingStatistics.Where(x => x.InvertorId == request.InvertorId && x.Date >= request.FromDate).First();
                 if (powerInMW)
                 {
                     statisticsNow.PredictedProducing /= 1000;
@@ -434,7 +434,7 @@ namespace SolarService
         {
             try
             {
-                List<Event> events = db.Events.Where(x => x.ErrorCode == request.Code).ToList();
+                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.ErrorCode == request.Code).ToList();
 
                 foreach (Event item in events)
                 {
@@ -451,7 +451,7 @@ namespace SolarService
         {
             try
             {
-                List<Event> events = db.Events.Where(x => x.InvertorId == request.InvertorId).ToList();
+                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.InvertorId == request.InvertorId).ToList();
 
                 foreach (Event item in events)
                 {
@@ -469,7 +469,7 @@ namespace SolarService
         {
             try
             {
-                List<Event> events = db.Events.Where(x => x.StationId == request.StationId).ToList();
+                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.StationId == request.StationId).ToList();
 
                 foreach (Event item in events)
                 {
@@ -487,7 +487,7 @@ namespace SolarService
         {
             try
             {
-                List<Event> events = db.Events.Where(x => x.Date >= request.FromDate).ToList();
+                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.Date >= request.FromDate).ToList();
 
                 foreach (Event item in events)
                 {
@@ -524,7 +524,7 @@ namespace SolarService
         {
             try
             {
-                List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.Where(x => x.InvertorId == request.InvertorId && x.Date >= request.FromDate).ToList();
+                List<InvertorProducingStatistic> statistics = DatabaseData.GetInstance().db.InvertorProducingStatistics.Where(x => x.InvertorId == request.InvertorId && x.Date >= request.FromDate).ToList();
 
                 foreach (InvertorProducingStatistic item in statistics)
                 {
@@ -545,7 +545,7 @@ namespace SolarService
 
         //public override Task<ChartImage> GetStatisticsChartImage(EmptyRequest request, ServerCallContext context)
         //{
-        //    var statistics = db.InvertorProducingStatistics.ToList();
+        //    var statistics = GetInstance().db.InvertorProducingStatistics.ToList();
         //    Entry[] chartEntries = new Entry[statistics.Count * 2];
         //    int i = 0;
         //    foreach (var item in statistics)
