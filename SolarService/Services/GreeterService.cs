@@ -483,11 +483,12 @@ namespace SolarService
             }
         }
 
-        public override async Task GetEventsByStation(StationProducingStatisticRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
+        public override async Task GetEventsByStation(StationEventsRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
             try
             {
-                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.StationId == request.StationId).ToList();
+                SolarStation station = DatabaseData.GetInstance().db.SolarStations.Where(x => x.Name == request.StationName).FirstOrDefault();
+                List<Event> events = DatabaseData.GetInstance().db.Events.Where(x => x.StationId == station.Id).ToList();
 
                 foreach (Event item in events)
                 {

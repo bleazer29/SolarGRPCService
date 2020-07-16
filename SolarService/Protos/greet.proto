@@ -25,7 +25,7 @@ service Greeter {
 
     rpc GetEventsByErrorCode(ErrorCodeRequest) returns (stream Event);
     rpc GetEventsByErrorMessage(ErrorMessageRequest) returns (stream Event);
-    rpc GetEventsByStation(StationProducingStatisticRequest) returns (stream Event);
+    rpc GetEventsByStation(StationEventsRequest) returns (stream Event);
     rpc GetAllStationsEventsPeriod(PeriodRequest) returns (stream Event);
     rpc GetEventsByInvertor(InvertorRequest) returns (stream Event);
 
@@ -85,6 +85,12 @@ message MeteoStation {
 message StationProducingStatisticRequest{
     int64 date = 1;
     int32 stationId = 3;
+}
+
+message StationEventsRequest{
+    string stationName = 1;
+    int64 fromDate = 2;
+    int64 toDate = 3;
 }
 
 message InvertorsOnStationRequest{
