@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
+using SolarService.Misc;
 using SolarService.Models;  
 
 namespace SolarService
@@ -59,11 +60,13 @@ namespace SolarService
             }
         }
 
-        public override Task<SuccessResponse> AuthoriseUser(User request, ServerCallContext context)
+        public override Task<SuccessResponse> AuthoriseUser(AuthRequest request, ServerCallContext context)
         {
             try
             {
-                bool userExists = db.Users.Where(x => x.Login == request.Login && x.Password == request.Password).Any();
+                string uName = Encryptor.Decrypt(request.UserName, "londoniron");
+                string uPass = Encryptor.Decrypt(request.Password, "londoniron");
+                bool userExists = db.Users.Where(x => x.Login == uName && x.Password == uPass).Any();
                 if (userExists)
                 {
                     return Task.FromResult(new SuccessResponse()
@@ -509,6 +512,8 @@ namespace SolarService
 
                 events = FilterEvents(request, events);
 
+                if (events.Count < 1) await responseStream.WriteAsync(new Event());
+
                 foreach (Event item in events)
                 {
                     await responseStream.WriteAsync(item);
@@ -522,38 +527,33 @@ namespace SolarService
         }
 
         private List<Event> FilterEvents(EventsRequest request, List<Event> events)
-        {   
-            if (!string.IsNullOrEmpty(request.EventType))
+        {
+            try
             {
-                EventType type = db.EventTypes.Where(x => x.Name == request.EventType).FirstOrDefault();
-                events = events.Where(x => x.EventTypeId == type.Id).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(request.StationName))
-            {
-                SolarStation station = db.SolarStations.Where(x => x.Name == request.StationName).FirstOrDefault();
-                if(station != null)
+                if (!string.IsNullOrEmpty(request.EventType))
                 {
+                    EventType type = db.EventTypes.Where(x => x.Name == request.EventType).FirstOrDefault();
+                    events = events.Where(x => x.EventTypeId == type.Id).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(request.StationName))
+                {
+                    SolarStation station = db.SolarStations.Where(x => x.Name == request.StationName).FirstOrDefault();
                     events = events.Where(x => x.StationId == station.Id).ToList();
                 }
-            }
-            else if (!string.IsNullOrEmpty(request.InvertorName))
-            {
-                Invertor invertor = db.Invertors.Where(x => x.Name == request.InvertorName).FirstOrDefault();
-                if(invertor != null)
+                else if (!string.IsNullOrEmpty(request.InvertorName))
                 {
+                    Invertor invertor = db.Invertors.Where(x => x.Name == request.InvertorName).FirstOrDefault();
                     events = events.Where(x => x.StationId == invertor.Id).ToList();
                 }
-            }
-            else if (!string.IsNullOrEmpty(request.ErrorMessage))
-            {
-                ErrorType type = db.ErrorTypes.Where(x => x.Name == request.ErrorMessage).FirstOrDefault();
-                if(type != null)
+                else if (!string.IsNullOrEmpty(request.ErrorMessage))
                 {
+                    ErrorType type = db.ErrorTypes.Where(x => x.Name == request.ErrorMessage).FirstOrDefault();
                     events = events.Where(x => x.ErrorTypeId == type.Id).ToList();
                 }
+                return events;
             }
-            return events;
+            catch(NullReferenceException) { return new List<Event>(); }
         }
 
         public override Task<SuccessResponse> ChangePowerMeasurementUnit(IsMWRequest request, ServerCallContext context)

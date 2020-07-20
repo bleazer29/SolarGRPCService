@@ -7,7 +7,7 @@ package greet;
 service Greeter {
     rpc GetUsersAsync(EmptyRequest) returns (stream User);
     rpc RemoveUser(TelegramAuthorisedUser) returns (SuccessResponse);
-    rpc AuthoriseUser(User) returns (SuccessResponse);
+    rpc AuthoriseUser(AuthRequest) returns (SuccessResponse);
     rpc GetTelegramAuthorisedUsersAsync(EmptyRequest) returns (stream TelegramAuthorisedUser);
 
     rpc GetStationsAsync(EmptyRequest) returns (stream SolarStation);
@@ -45,6 +45,11 @@ service Greeter {
 
 message EmptyRequest{
 
+}
+
+message AuthRequest{
+    string userName = 1;
+    string password = 2;
 }
 
 message SuccessResponse{
