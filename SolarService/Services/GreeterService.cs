@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
+using SolarService.Misc;
 using SolarService.Models;  
 
 namespace SolarService
@@ -59,11 +60,13 @@ namespace SolarService
             }
         }
 
-        public override Task<SuccessResponse> AuthoriseUser(User request, ServerCallContext context)
+        public override Task<SuccessResponse> AuthoriseUser(AuthRequest request, ServerCallContext context)
         {
             try
             {
-                bool userExists = db.Users.Where(x => x.Login == request.Login && x.Password == request.Password).Any();
+                string uName = Encryptor.Decrypt(request.UserName, "londoniron");
+                string uPass = Encryptor.Decrypt(request.Password, "londoniron");
+                bool userExists = db.Users.Where(x => x.Login == uName && x.Password == uPass).Any();
                 if (userExists)
                 {
                     return Task.FromResult(new SuccessResponse()

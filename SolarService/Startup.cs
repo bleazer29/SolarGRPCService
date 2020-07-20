@@ -31,7 +31,6 @@ namespace SolarService
 
             app.UseRouting();
 
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<GreeterService>();
