@@ -107,24 +107,6 @@ namespace SolarService
             }
         }
 
-        public override async Task GetEventsAsync(EmptyRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
-        {
-            try
-            {
-                List<Event> events = db.Events.ToList();
-
-                foreach (Event item in events)
-                {
-                    await responseStream.WriteAsync(item);
-                }
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                await responseStream.WriteAsync(new Event());
-            }
-        }
-
         public override async Task GetEventTypesAsync(EmptyRequest request, IServerStreamWriter<EventType> responseStream, ServerCallContext context)
         {
             try
@@ -140,24 +122,6 @@ namespace SolarService
             {
                 Console.WriteLine(ex.Message);
                 await responseStream.WriteAsync(new EventType());
-            }
-        }
-
-        public override async Task GetEventsByTypeAsync(EventsByTypeRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
-        {
-            try
-            {
-                List<Event> events = db.Events.Where(x => x.EventTypeId == request.TypeId).ToList();
-
-                foreach (Event item in events)
-                {
-                    await responseStream.WriteAsync(item);
-                }
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                await responseStream.WriteAsync(new Event());
             }
         }
 
@@ -255,45 +219,7 @@ namespace SolarService
             }
         }
 
-        public override Task<ErrorType> GetErrorMessage(ErrorTypeRequest request, ServerCallContext context)
-        {
-            try
-            {
-                ErrorType result = db.ErrorTypes.Where(x => x.Id == request.ErrorTypeId).FirstOrDefault();
-                return Task.FromResult(result);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return Task.FromResult(new ErrorType());
-
-        }
-
-        public override async Task GetAllStationProducingStatisticsAsync(EmptyRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
-        {
-            try
-            {
-                List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.ToList();
-
-                foreach (InvertorProducingStatistic item in statistics)
-                {
-                    if (powerInMW)
-                    {
-                        item.ProducedEnergy /= 1000;
-                        item.PredictedProducing /= 1000;
-                    }
-                    await responseStream.WriteAsync(item);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                await responseStream.WriteAsync(new InvertorProducingStatistic());
-            }
-        }
-
-        public override async Task GetStationProducingStatisticPeriod(StationProducingStatisticRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
+        public override async Task GetStationStatisticForChartAsync(StationProducingStatisticRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
         {try
             {
                 List<InvertorProducingStatistic> statistics = db.InvertorProducingStatistics.Where(x => x.StationId == request.StationId && x.Date >= request.Date).ToList();
@@ -314,7 +240,7 @@ namespace SolarService
             }
         }
 
-        public override async Task GetAllStationsProducingStatisticPeriod(PeriodRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
+        public override async Task GetAllStationsStatisticForChartAsync(PeriodRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
         {
             try
             {
@@ -337,7 +263,7 @@ namespace SolarService
             }
         }
 
-        public override Task<InvertorProducingStatistic> GetAllStationsProducing(EmptyRequest request, ServerCallContext context)
+        public override Task<InvertorProducingStatistic> GetAllStationsStatistics(EmptyRequest request, ServerCallContext context)
         {
             try
             {
@@ -371,7 +297,7 @@ namespace SolarService
             return Task.FromResult(new InvertorProducingStatistic());
         }
 
-        public override Task<InvertorProducingStatistic> GetStationProducingStatisticAsync(StationProducingStatisticRequest request, ServerCallContext context)
+        public override Task<InvertorProducingStatistic> GetStationStatisticAsync(StationProducingStatisticRequest request, ServerCallContext context)
         {
             try
             {
@@ -409,7 +335,7 @@ namespace SolarService
             return Task.FromResult(new InvertorProducingStatistic());
         }
 
-        public override Task<InvertorProducingStatistic> GetInvertorProducingStatisticsAsync(InvertorProducingStatisticRequest request, ServerCallContext context)
+        public override Task<InvertorProducingStatistic> GetInvertorStatisticsAsync(InvertorProducingStatisticRequest request, ServerCallContext context)
         {
             try
             {
@@ -429,82 +355,7 @@ namespace SolarService
             }
         }
 
-        public override async Task GetEventsByErrorCode(ErrorCodeRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
-        {
-            try
-            {
-                List<Event> events = db.Events.Where(x => x.ErrorCode == request.Code).ToList();
-
-                foreach (Event item in events)
-                {
-                    await responseStream.WriteAsync(item);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        public override async Task GetEventsByErrorMessage(ErrorMessageRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
-        {
-            try
-            {
-                ErrorType type = db.ErrorTypes.Where(x => x.Name == request.Message).FirstOrDefault();
-                List<Event> events = db.Events.Where(x => x.ErrorTypeId == type.Id && (x.Date >= request.FromDate && x.Date <= request.ToDate)).ToList();
-
-                foreach (Event item in events)
-                {
-                    await responseStream.WriteAsync(item);
-                }
-            }
-            catch (Exception ex)
-            {
-                await responseStream.WriteAsync(new Event());
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        public override async Task GetEventsByInvertor(InvertorRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
-        {
-            try
-            {
-                Invertor inv = db.Invertors.Where(x => x.Name == request.InvertorName).FirstOrDefault();
-
-                List<Event> events = db.Events.Where(x => x.InvertorId == inv.Id && (x.Date >= request.FromDate && x.Date <= request.ToDate)).ToList();
-
-                foreach (Event item in events)
-                {
-                    await responseStream.WriteAsync(item);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                await responseStream.WriteAsync(new Event());
-            }
-        }
-
-        public override async Task GetEventsByStation(StationEventsRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
-        {
-            try
-            {
-                SolarStation station = db.SolarStations.Where(x => x.Name == request.StationName).FirstOrDefault();
-                List<Event> events = db.Events.Where(x => x.StationId == station.Id && (x.Date >= request.FromDate && x.Date <= request.ToDate)).ToList();
-
-                foreach (Event item in events)
-                {
-                    await responseStream.WriteAsync(item);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                await responseStream.WriteAsync(new Event());
-            }
-        }
-
-        public override async Task GetAllStationsEventsPeriod(EventsRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
+        public override async Task GetEventsAsync(EventsRequest request, IServerStreamWriter<Event> responseStream, ServerCallContext context)
         {
             try
             {
@@ -575,7 +426,7 @@ namespace SolarService
             }
         }
 
-        public override async Task GetInvertorProducingStatisticPeriod(InvertorProducingStatisticRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
+        public override async Task GetInvertorStatisticForChartAsync(InvertorProducingStatisticRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
         {
             try
             {
