@@ -426,6 +426,22 @@ namespace SolarService
             }
         }
 
+        public override Task<ErrorMessageResponse> GetErrorMessage(ErrorTypeRequest request, ServerCallContext context)
+        {
+            try
+            {
+                ErrorType response = db.ErrorTypes.Where(x => x.Id == request.ErrorTypeId).FirstOrDefault();
+                return Task.FromResult(new ErrorMessageResponse()
+                {
+                    Message = response.Name,
+                });
+            }
+            catch(NullReferenceException)
+            {
+                return Task.FromResult(new ErrorMessageResponse());
+            }
+        }
+
         public override async Task GetInvertorStatisticForChartAsync(InvertorProducingStatisticRequest request, IServerStreamWriter<InvertorProducingStatistic> responseStream, ServerCallContext context)
         {
             try

@@ -5,7 +5,10 @@ option csharp_namespace = "SolarService";
 package greet;
 
 service Greeter {
+
     rpc GetUsersAsync(EmptyRequest) returns (stream User);
+
+    // Remove user from telegram bot
     rpc RemoveUser(TelegramAuthorisedUser) returns (SuccessResponse);
     rpc AuthoriseUser(AuthRequest) returns (SuccessResponse);
     rpc GetTelegramAuthorisedUsersAsync(EmptyRequest) returns (stream TelegramAuthorisedUser);
@@ -13,28 +16,42 @@ service Greeter {
     rpc GetStationsAsync(EmptyRequest) returns (stream SolarStation);
 
     rpc GetStationForecast(StationRequest) returns (MeteoStation);
-
+        
+    // Invertors from one station
     rpc GetInvertorsOnStationAsync(InvertorsOnStationRequest) returns (stream Invertor);
+
+    // Invertors from all stations
     rpc GetAllInvertorsAsync(EmptyRequest) returns (stream Invertor);
    
     rpc GetEventTypesAsync(EmptyRequest) returns (stream EventType);
     
     rpc GetErrorTypesAsync(EmptyRequest) returns (stream ErrorType);
 
+    rpc GetErrorMessage(ErrorTypeRequest) returns (ErrorMessageResponse);
+
     rpc GetEventsAsync(EventsRequest) returns (stream Event);
 
+    // Statistics for one station for chart
     rpc GetStationStatisticForChartAsync(StationProducingStatisticRequest) returns (stream InvertorProducingStatistic);
+
+    // Statistics for one station total (for textboxes)
     rpc GetStationStatisticAsync(StationProducingStatisticRequest) returns (InvertorProducingStatistic);
+
+    // Statistics for all stations for chart
     rpc GetAllStationsStatisticForChartAsync(PeriodRequest) returns (stream InvertorProducingStatistic);
+
+    // Statistics for all stations total (for textboxes)
     rpc GetAllStationsStatistics(EmptyRequest) returns (InvertorProducingStatistic);
-
-    rpc GetInvertorStatisticsAsync(InvertorProducingStatisticRequest) returns (InvertorProducingStatistic);
+    
     rpc GetInvertorStatisticForChartAsync(InvertorProducingStatisticRequest) returns (stream InvertorProducingStatistic);
+    rpc GetInvertorStatisticsAsync(InvertorProducingStatisticRequest) returns (InvertorProducingStatistic);
 
+    // Not yet implemented
     rpc GetStatisticsChartImage(EmptyRequest) returns (ChartImage);
 
     rpc ChangePowerMeasurementUnit(IsMWRequest) returns (SuccessResponse);
 }
+
 
 message EmptyRequest{
 
@@ -108,20 +125,12 @@ message EventsByTypeRequest{
     int32 typeId = 1;
 }
 
-message ErrorCodeRequest{
-    int64 code = 1;
-    int64 fromDate = 2;
-    int64 toDate = 3;
-}
-
-message ErrorMessageRequest{
-    string message = 1;
-    int64 fromDate = 2;
-    int64 toDate = 3;
-}
-
 message ErrorTypeRequest{
     int32 errorTypeId =1;
+}
+
+message ErrorMessageResponse{
+    string message = 1;
 }
 
 message EventType{
@@ -198,6 +207,7 @@ message TelegramAuthorisedUser{
     int32 id = 1;
     int64 telegramUserId = 2;
     string userLogin = 3;
+    bool isSubscribedToMailing = 4;
 }
 
 message ChartImage{
