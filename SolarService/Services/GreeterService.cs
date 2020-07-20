@@ -465,6 +465,19 @@ namespace SolarService
             }
         }
 
+        public override Task<Invertor> GetInvertor(InvertorRequest request, ServerCallContext context)
+        {
+            try
+            {
+                Invertor invertor = db.Invertors.Where(x => x.Id == request.InvertorId).FirstOrDefault();
+                return Task.FromResult(invertor);
+            }
+            catch (NullReferenceException)
+            {
+                return Task.FromResult(new Invertor());
+            }
+        }
+
     }
 }
 

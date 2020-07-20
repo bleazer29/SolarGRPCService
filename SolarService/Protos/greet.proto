@@ -22,6 +22,8 @@ service Greeter {
 
     // Invertors from all stations
     rpc GetAllInvertorsAsync(EmptyRequest) returns (stream Invertor);
+
+    rpc GetInvertor(InvertorRequest) returns (Invertor);
    
     rpc GetEventTypesAsync(EmptyRequest) returns (stream EventType);
     
@@ -85,9 +87,7 @@ message EventsRequest{
 }
 
 message InvertorRequest{
-    string invertorName = 1;
-    int64 fromDate = 2;
-    int64 toDate = 3;
+    int32 invertorId = 1;
 }
 
 message StationRequest{
