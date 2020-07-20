@@ -340,4 +340,4 @@ ASALocalRun/
 healthchecksdb
 
 # ConnectionString
-/Models/SolarContext.class
+/Models/SolarContext.cs
