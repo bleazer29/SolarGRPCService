@@ -24,7 +24,7 @@ namespace SolarService.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=IL707;Database=SolarDb;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer(@"Server=IL634\SQLEXPRESS;Database=SolarDb;Trusted_Connection=True;");
             }
         }
 
