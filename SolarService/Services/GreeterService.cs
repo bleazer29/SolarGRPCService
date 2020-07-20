@@ -478,6 +478,19 @@ namespace SolarService
             }
         }
 
+        public override Task<SolarStation> GetStation(StationRequest request, ServerCallContext context)
+        {
+            try
+            {
+                SolarStation station = db.SolarStations.Where(x => x.Id == request.StationId).FirstOrDefault();
+                return Task.FromResult(station);
+            }
+            catch (NullReferenceException)
+            {
+                return Task.FromResult(new SolarStation());
+            }
+        }
+
     }
 }
 
